@@ -33,16 +33,16 @@
 - [x] Wire to QuickCaptureViewModel
 - [x] Sheet presentation (.presentationDetents([.large]))
 
-## Sprint 3: Dashboard UI — IN PROGRESS
+## Sprint 3: Dashboard UI — COMPLETE
 
-- [ ] WarChestCard (amount display, progress bar, state colors)
-- [ ] TodayTransactionsList (grouped by time, category icons)
-- [ ] StreakBanner (log streak + budget streak display)
-- [ ] InsightCard (smart suggestion placeholder)
-- [ ] DashboardView layout (ScrollView with cards)
-- [ ] Wire to DashboardViewModel
+- [x] WarChestCard (amount display, progress bar, state colors, glass material)
+- [x] TodayTransactionsList (tactical log, transaction rows, empty state)
+- [x] StreakBanner (log streak flame + budget streak shield pills)
+- [x] InsightCard (Strategic Edge with sparkles icon)
+- [x] DashboardView layout (ScrollView with LazyVStack, all cards)
+- [x] Wire to DashboardViewModel (.task {} loading, auto-refresh on sheet dismiss)
 
-## Sprint 4: Transaction Log UI
+## Sprint 4: Transaction Log UI — IN PROGRESS
 
 - [ ] TransactionLogView (grouped by date, month summary)
 - [ ] TransactionRow (category icon, amount, note, time)
