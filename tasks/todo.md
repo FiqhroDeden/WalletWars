@@ -86,15 +86,15 @@
 - [x] Hall of Fame section (completed quests with trophy icons)
 - [x] Wire to QuestViewModel (create, deposit, abandon, load)
 
-## Sprint 8: Profile — IN PROGRESS
+## Sprint 8: Profile — COMPLETE
 
-- [ ] ProfileView layout
-- [ ] LevelCard (XP bar, level title, progress to next)
-- [ ] StreakCards (log + budget streak display)
-- [ ] DuelRecordCard (W/L/D record, win streak)
-- [ ] BadgeGrid (unlocked + locked badges)
-- [ ] LifetimeStatsCard (total transactions, saved, etc.)
-- [ ] Wire to ProfileViewModel
+- [x] ProfileView layout (ScrollView with all sections)
+- [x] LevelCard (XP bar, level title, progress percentage)
+- [x] StreakCards (log flame + budget shield, current + best)
+- [x] DuelRecordCard (wins/losses with colors)
+- [x] BadgeGrid (4-column grid, unlocked colorful, locked greyed with lock)
+- [x] LifetimeStatsCard (transactions, quests, duels, win rate)
+- [x] Wire to ProfileViewModel
 
 ## Sprint 9: Insights Engine
 
