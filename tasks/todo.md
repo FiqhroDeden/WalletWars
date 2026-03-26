@@ -50,8 +50,8 @@
 - [x] FilterSheet (period chips, category chips, flow layout, Reset/Apply)
 - [x] Delete transaction (swipe-to-delete action)
 - [x] Wire to TransactionLogViewModel (.task {} loading, filter apply)
-- [ ] Edit transaction flow (deferred to polish sprint)
-- [ ] CategoryBudgetView (deferred to polish sprint)
+- [x] Edit transaction flow (tap row → EditTransactionSheet)
+- [x] CategoryBudgetView (per-category spending bars in Log tab)
 
 ## Sprint 5: Gamification Services — COMPLETE
 
@@ -61,8 +61,8 @@
 - [x] Integrate into QuickCapture flow (XP + streaks + badges on transaction save)
 - [x] Integrate into Quest flow (milestone XP + quest complete XP + badges)
 - [x] Unit tests: XPServiceTests (4), StreakServiceTests (8), BadgeServiceTests (10)
-- [ ] XPFloatView animation component (deferred to polish sprint)
-- [ ] Level-up celebration UI (deferred to polish sprint)
+- [x] XPFloatView animation component (float up + fade out)
+- [x] LevelUpOverlay celebration (full-screen with auto-dismiss)
 
 ## Sprint 6: Weekly Duel — COMPLETE
 
@@ -73,8 +73,8 @@
 - [x] RoundCard (comparison bars with winner indicators)
 - [x] DuelResultBanner (WIN/LOSS/DRAW with XP reward + momentum)
 - [x] DuelHistoryList (horizontal scroll of past duel chips)
-- [ ] BGTaskScheduler for Monday snapshot (deferred to polish sprint)
-- [ ] WeeklySnapshot auto-creation at week boundary (deferred to polish sprint)
+- [x] WeeklySnapshotService (auto-create snapshot at week boundary on app launch)
+- [x] Duel XP/stats awarding on snapshot creation
 
 ## Sprint 7: Saving Quests — COMPLETE
 
