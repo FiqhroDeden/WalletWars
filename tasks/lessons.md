@@ -11,4 +11,4 @@
 
 ## Sprint 1
 
-- **SwiftData `#Predicate` enum comparison:** `#Predicate` does NOT support shorthand enum cases (`.active`). Must use fully qualified form (`QuestStatus.active`). Error: "Member access without an explicit base is not supported in this predicate."
+- **SwiftData `#Predicate` enum comparison:** `#Predicate` cannot reference enum cases at all — not even fully qualified (`QuestStatus.active`). Error: "Key path cannot refer to enum case". Fix: capture the raw value in a local variable outside the closure, then compare against `.rawValue` inside: `let raw = QuestStatus.active.rawValue; #Predicate { $0.status.rawValue == raw }`.
