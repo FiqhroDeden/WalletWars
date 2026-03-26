@@ -21,7 +21,6 @@ struct ContentView: View {
             Tab("Duel", systemImage: "figure.fencing", value: 2) {
                 DuelView()
             }
-            .tint(Color.rival)
 
             Tab("Quest", systemImage: "flag.fill", value: 3) {
                 QuestView()
@@ -31,6 +30,6 @@ struct ContentView: View {
                 ProfileView()
             }
         }
-        .tint(Color.hero)
+        .tint(selectedTab == 2 ? Color.rival : Color.hero)
     }
 }
