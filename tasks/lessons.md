@@ -12,4 +12,4 @@
 ## Sprint 1
 
 - **`Category` name collision with Darwin:** Our `Category` model clashes with `Darwin.Category` (OpaquePointer). In test files, add `private typealias Category = WalletWars.Category` after the import block. This also affects any file that uses `FetchDescriptor<Category>` or `Category(...)` initializer.
-- **SwiftData `#Predicate` enum comparison:** `#Predicate` cannot reference enum cases at all — not even fully qualified (`QuestStatus.active`). Error: "Key path cannot refer to enum case". Fix: capture the raw value in a local variable outside the closure, then compare against `.rawValue` inside: `let raw = QuestStatus.active.rawValue; #Predicate { $0.status.rawValue == raw }`.
+- **SwiftData `#Predicate` enum comparison:** Cannot use enum cases directly inside predicates (`QuestStatus.active` or `.active`). Also cannot use `.rawValue` — crashes at runtime with "rawValue is not a member". Fix: capture the enum value in a local variable OUTSIDE the closure, then compare directly: `let status = QuestStatus.active; #Predicate { $0.status == status }`. SwiftData handles the comparison internally.
