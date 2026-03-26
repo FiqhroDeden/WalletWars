@@ -48,7 +48,12 @@ enum WarChestService {
     }
 
     /// Determine WarChestState for a DailyLog.
+    /// Uses warChest (can be negative) to detect .broken state,
+    /// since warChestPct clamps to 0 via max(0,...).
     static func stateForToday(dailyLog: DailyLog) -> WarChestState {
-        WarChestState.from(percentage: dailyLog.warChestPct)
+        if dailyLog.warChest < 0 {
+            return .broken
+        }
+        return WarChestState.from(percentage: dailyLog.warChestPct)
     }
 }

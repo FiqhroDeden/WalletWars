@@ -190,7 +190,8 @@ struct MomentumStateTests {
     }
 
     @Test func momentumStateFreefalling() {
-        #expect(MomentumState.from(percentage: -30) == .freefalling)
+        // -30 is the boundary of slipping (-30..<-10), so -31 is freefalling
+        #expect(MomentumState.from(percentage: -31) == .freefalling)
         #expect(MomentumState.from(percentage: -50) == .freefalling)
     }
 }

@@ -29,22 +29,12 @@ final class QuestViewModel {
 
     /// Load active quest and completed quests.
     func loadQuests() throws {
-        let activeStatus = QuestStatus.active
-        let activeDescriptor = FetchDescriptor<SavingQuest>(
-            predicate: #Predicate<SavingQuest> { quest in
-                quest.status == activeStatus
-            }
-        )
-        activeQuest = try context.fetch(activeDescriptor).first
-
-        let completedStatus = QuestStatus.completed
-        let completedDescriptor = FetchDescriptor<SavingQuest>(
-            predicate: #Predicate<SavingQuest> { quest in
-                quest.status == completedStatus
-            },
-            sortBy: [SortDescriptor(\.completedAt, order: .reverse)]
-        )
-        completedQuests = try context.fetch(completedDescriptor)
+        // SwiftData #Predicate cannot compare enum values — fetch all and filter in memory
+        let allQuests = try context.fetch(FetchDescriptor<SavingQuest>())
+        activeQuest = allQuests.first { $0.status == .active }
+        completedQuests = allQuests
+            .filter { $0.status == .completed }
+            .sorted { ($0.completedAt ?? .distantPast) > ($1.completedAt ?? .distantPast) }
     }
 
     // MARK: - Create
@@ -53,14 +43,9 @@ final class QuestViewModel {
     /// Enforces max 1 active quest. Throws if an active quest already exists.
     @discardableResult
     func createQuest(name: String, targetAmount: Double, deadline: Date? = nil) throws -> SavingQuest {
-        // Enforce max 1 active
-        let activeStatus = QuestStatus.active
-        let activeDescriptor = FetchDescriptor<SavingQuest>(
-            predicate: #Predicate<SavingQuest> { quest in
-                quest.status == activeStatus
-            }
-        )
-        let activeCount = try context.fetchCount(activeDescriptor)
+        // Enforce max 1 active — fetch all and filter in memory
+        let allQuests = try context.fetch(FetchDescriptor<SavingQuest>())
+        let activeCount = allQuests.filter { $0.status == .active }.count
         guard activeCount == 0 else {
             throw QuestError.activeQuestExists
         }
