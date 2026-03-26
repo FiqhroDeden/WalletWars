@@ -76,17 +76,17 @@
 - [ ] BGTaskScheduler for Monday snapshot (deferred to polish sprint)
 - [ ] WeeklySnapshot auto-creation at week boundary (deferred to polish sprint)
 
-## Sprint 7: Saving Quests
+## Sprint 7: Saving Quests — COMPLETE
 
-- [ ] QuestView (active quest display, progress ring)
-- [ ] QuestProgressRing component
-- [ ] MilestoneList (milestone checkmarks, progress)
-- [ ] QuestDepositSheet (deposit amount entry)
-- [ ] NewQuestSheet (name, target, deadline, milestones)
-- [ ] CompletedQuestCard (Hall of Fame)
-- [ ] Wire to QuestViewModel
+- [x] QuestView (3 states: active quest, empty, hall of fame)
+- [x] QuestProgressRing (circular progress with percentage center)
+- [x] MilestoneList (checkmarks, dashed pending, completion dates)
+- [x] QuestDepositSheet (amount input, deposit to quest)
+- [x] NewQuestSheet (name, target, deadline toggle, date picker)
+- [x] Hall of Fame section (completed quests with trophy icons)
+- [x] Wire to QuestViewModel (create, deposit, abandon, load)
 
-## Sprint 8: Profile
+## Sprint 8: Profile — IN PROGRESS
 
 - [ ] ProfileView layout
 - [ ] LevelCard (XP bar, level title, progress to next)
