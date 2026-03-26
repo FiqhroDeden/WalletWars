@@ -6,6 +6,8 @@
 import SwiftData
 @testable import WalletWars
 
+private typealias Category = WalletWars.Category
+
 enum TestHelpers {
     /// Creates an in-memory ModelContainer with all WalletWars models.
     static func makeContainer() throws -> ModelContainer {

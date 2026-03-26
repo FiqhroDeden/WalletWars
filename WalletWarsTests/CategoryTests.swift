@@ -8,6 +8,8 @@ import Foundation
 import SwiftData
 @testable import WalletWars
 
+private typealias Category = WalletWars.Category
+
 @MainActor
 struct CategoryTests {
 
