@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WalletWars Icon Generator</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: -apple-system, sans-serif;
+    color: #fff;
+    gap: 32px;
+    padding: 40px;
+  }
+  canvas { border-radius: 12px; box-shadow: 0 20px 60px rgba(27,110,242,0.3); }
+  .controls {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  button {
+    background: #1B6EF2;
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.2s;
+  }
+  button:hover { background: #0A4FBD; transform: translateY(-1px); }
+  .previews {
+    display: flex;
+    gap: 24px;
+    align-items: end;
+  }
+  .preview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .preview-item span {
+    font-size: 11px;
+    color: #666;
+  }
+  .preview-item canvas {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+</style>
+</head>
+<body>
+
+<canvas id="icon" width="1024" height="1024"></canvas>
+
+<div class="controls">
+  <button onclick="downloadIcon()">Download 1024x1024 PNG</button>
+  <button onclick="downloadAllSizes()" style="background:#F5A623">Download All Sizes</button>
+</div>
+
+<div class="previews" id="previews"></div>
+
+<script>
+function drawIcon(ctx, size) {
+  const s = size / 1024;
+
+  // === BACKGROUND: Deep gradient ===
+  const bgGrad = ctx.createLinearGradient(0, 0, size, size);
+  bgGrad.addColorStop(0, '#0D1B3E');
+  bgGrad.addColorStop(0.5, '#0A1530');
+  bgGrad.addColorStop(1, '#061022');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, size, size);
+
+  // === AMBIENT GLOW: Blue radial behind shield ===
+  const glowGrad = ctx.createRadialGradient(
+    size * 0.5, size * 0.48, 0,
+    size * 0.5, size * 0.48, size * 0.55
+  );
+  glowGrad.addColorStop(0, 'rgba(27, 110, 242, 0.25)');
+  glowGrad.addColorStop(0.5, 'rgba(27, 110, 242, 0.08)');
+  glowGrad.addColorStop(1, 'rgba(27, 110, 242, 0)');
+  ctx.fillStyle = glowGrad;
+  ctx.fillRect(0, 0, size, size);
+
+  // === SHIELD SHAPE ===
+  const cx = size * 0.5;
+  const shieldTop = size * 0.12;
+  const shieldBottom = size * 0.88;
+  const shieldWidth = size * 0.38;
+
+  ctx.save();
+
+  // Shield path — pointed bottom, broad shoulders
+  ctx.beginPath();
+  ctx.moveTo(cx, shieldTop); // top center
+
+  // Right shoulder curve
+  ctx.bezierCurveTo(
+    cx + shieldWidth * 0.3, shieldTop,
+    cx + shieldWidth, shieldTop + size * 0.06,
+    cx + shieldWidth, shieldTop + size * 0.12
+  );
+
+  // Right side
+  ctx.lineTo(cx + shieldWidth, size * 0.52);
+
+  // Right bottom curve to point
+  ctx.bezierCurveTo(
+    cx + shieldWidth, size * 0.65,
+    cx + shieldWidth * 0.4, size * 0.78,
+    cx, shieldBottom
+  );
+
+  // Left bottom curve
+  ctx.bezierCurveTo(
+    cx - shieldWidth * 0.4, size * 0.78,
+    cx - shieldWidth, size * 0.65,
+    cx - shieldWidth, size * 0.52
+  );
+
+  // Left side
+  ctx.lineTo(cx - shieldWidth, shieldTop + size * 0.12);
+
+  // Left shoulder curve
+  ctx.bezierCurveTo(
+    cx - shieldWidth, shieldTop + size * 0.06,
+    cx - shieldWidth * 0.3, shieldTop,
+    cx, shieldTop
+  );
+
+  ctx.closePath();
+
+  // Shield fill: gradient
+  const shieldGrad = ctx.createLinearGradient(0, shieldTop, 0, shieldBottom);
+  shieldGrad.addColorStop(0, '#2B7FFF');
+  shieldGrad.addColorStop(0.3, '#1B6EF2');
+  shieldGrad.addColorStop(0.7, '#1260D9');
+  shieldGrad.addColorStop(1, '#0A4FBD');
+  ctx.fillStyle = shieldGrad;
+  ctx.fill();
+
+  // Shield rim: bright edge
+  ctx.strokeStyle = 'rgba(168, 200, 255, 0.4)';
+  ctx.lineWidth = size * 0.004;
+  ctx.stroke();
+
+  // === SHIELD INNER BEVEL ===
+  ctx.save();
+  ctx.clip(); // clip to shield shape
+
+  // Top highlight
+  const highlightGrad = ctx.createLinearGradient(0, shieldTop, 0, shieldTop + size * 0.25);
+  highlightGrad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+  highlightGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = highlightGrad;
+  ctx.fillRect(0, 0, size, size);
+
+  // === DOLLAR SIGN: Bold, angular ===
+  const dollarCx = cx;
+  const dollarCy = size * 0.49;
+  const dollarScale = size * 0.0038;
+
+  ctx.save();
+  ctx.translate(dollarCx, dollarCy);
+  ctx.scale(dollarScale, dollarScale);
+
+  // Dollar sign as a custom bold path
+  ctx.beginPath();
+
+  // Top bar
+  ctx.moveTo(0, -85);
+  ctx.lineTo(0, -70);
+
+  // Top curve (S shape top)
+  ctx.moveTo(28, -62);
+  ctx.bezierCurveTo(28, -72, 18, -78, 0, -78);
+  ctx.bezierCurveTo(-22, -78, -34, -68, -34, -54);
+  ctx.bezierCurveTo(-34, -38, -20, -30, 0, -22);
+
+  // Middle crossing
+  ctx.lineTo(22, -14);
+  ctx.bezierCurveTo(40, -6, 42, 8, 42, 20);
+
+  // Bottom curve (S shape bottom)
+  ctx.bezierCurveTo(42, 44, 24, 56, 0, 56);
+  ctx.bezierCurveTo(-26, 56, -38, 44, -38, 32);
+
+  // Bottom bar
+  ctx.moveTo(0, 56);
+  ctx.lineTo(0, 72);
+
+  ctx.strokeStyle = '#F5A623';
+  ctx.lineWidth = 18;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+
+  // Dollar sign glow
+  ctx.shadowColor = '#F5A623';
+  ctx.shadowBlur = 30;
+  ctx.strokeStyle = 'rgba(245, 166, 35, 0.6)';
+  ctx.lineWidth = 18;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  ctx.restore();
+
+  // === CROSSED SWORDS behind dollar (battle motif) ===
+  const swordLen = size * 0.22;
+  const swordCy = size * 0.49;
+
+  ctx.globalAlpha = 0.2;
+  ctx.strokeStyle = '#A8C8FF';
+  ctx.lineWidth = size * 0.008;
+  ctx.lineCap = 'round';
+
+  // Left sword (top-left to bottom-right)
+  ctx.beginPath();
+  ctx.moveTo(cx - swordLen * 0.8, swordCy - swordLen * 0.6);
+  ctx.lineTo(cx + swordLen * 0.8, swordCy + swordLen * 0.6);
+  ctx.stroke();
+
+  // Right sword (top-right to bottom-left)
+  ctx.beginPath();
+  ctx.moveTo(cx + swordLen * 0.8, swordCy - swordLen * 0.6);
+  ctx.lineTo(cx - swordLen * 0.8, swordCy + swordLen * 0.6);
+  ctx.stroke();
+
+  ctx.globalAlpha = 1;
+
+  // === BATTLE SPARKS: Small amber dots ===
+  const sparkPositions = [
+    [0.3, 0.25], [0.72, 0.28], [0.25, 0.68], [0.75, 0.65],
+    [0.38, 0.35], [0.65, 0.38], [0.35, 0.58], [0.68, 0.55],
+  ];
+
+  sparkPositions.forEach(([px, py]) => {
+    const sparkSize = (1.5 + Math.random() * 2) * s;
+    ctx.beginPath();
+    ctx.arc(size * px, size * py, sparkSize, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(245, 166, 35, ${0.15 + Math.random() * 0.2})`;
+    ctx.fill();
+  });
+
+  ctx.restore(); // un-clip
+  ctx.restore();
+
+  // === OUTER GLOW RING ===
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  ctx.strokeStyle = '#F5A623';
+  ctx.lineWidth = size * 0.003;
+
+  // Draw shield outline again slightly larger
+  const outerScale = 1.02;
+  ctx.translate(cx, size * 0.5);
+  ctx.scale(outerScale, outerScale);
+  ctx.translate(-cx, -size * 0.5);
+
+  ctx.beginPath();
+  ctx.moveTo(cx, shieldTop);
+  ctx.bezierCurveTo(cx + shieldWidth * 0.3, shieldTop, cx + shieldWidth, shieldTop + size * 0.06, cx + shieldWidth, shieldTop + size * 0.12);
+  ctx.lineTo(cx + shieldWidth, size * 0.52);
+  ctx.bezierCurveTo(cx + shieldWidth, size * 0.65, cx + shieldWidth * 0.4, size * 0.78, cx, shieldBottom);
+  ctx.bezierCurveTo(cx - shieldWidth * 0.4, size * 0.78, cx - shieldWidth, size * 0.65, cx - shieldWidth, size * 0.52);
+  ctx.lineTo(cx - shieldWidth, shieldTop + size * 0.12);
+  ctx.bezierCurveTo(cx - shieldWidth, shieldTop + size * 0.06, cx - shieldWidth * 0.3, shieldTop, cx, shieldTop);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+
+  // === RIVAL RED ACCENT: Bottom tip energy ===
+  const tipGrad = ctx.createRadialGradient(
+    cx, shieldBottom - size * 0.05, 0,
+    cx, shieldBottom - size * 0.05, size * 0.08
+  );
+  tipGrad.addColorStop(0, 'rgba(229, 67, 42, 0.3)');
+  tipGrad.addColorStop(1, 'rgba(229, 67, 42, 0)');
+  ctx.fillStyle = tipGrad;
+  ctx.fillRect(0, 0, size, size);
+}
+
+// Draw main icon
+const mainCanvas = document.getElementById('icon');
+const mainCtx = mainCanvas.getContext('2d');
+drawIcon(mainCtx, 1024);
+
+// Draw previews
+const previewSizes = [180, 120, 87, 60, 40, 29];
+const previewLabels = ['180px\niPhone', '120px\niPhone', '87px\nSpotlight', '60px\niPhone', '40px\nSettings', '29px\nNotif'];
+const previewsContainer = document.getElementById('previews');
+
+previewSizes.forEach((sz, i) => {
+  const div = document.createElement('div');
+  div.className = 'preview-item';
+
+  const c = document.createElement('canvas');
+  c.width = sz;
+  c.height = sz;
+  c.style.width = sz + 'px';
+  c.style.height = sz + 'px';
+  c.style.borderRadius = (sz * 0.22) + 'px';
+
+  const pctx = c.getContext('2d');
+  drawIcon(pctx, sz);
+
+  const label = document.createElement('span');
+  label.textContent = previewLabels[i].split('\n')[0];
+
+  div.appendChild(c);
+  div.appendChild(label);
+  previewsContainer.appendChild(div);
+});
+
+function downloadIcon() {
+  const link = document.createElement('a');
+  link.download = 'WalletWars-Icon-1024.png';
+  link.href = mainCanvas.toDataURL('image/png');
+  link.click();
+}
+
+function downloadAllSizes() {
+  const sizes = [1024, 512, 180, 167, 152, 120, 87, 80, 76, 60, 58, 40, 29, 20];
+  sizes.forEach(sz => {
+    const c = document.createElement('canvas');
+    c.width = sz;
+    c.height = sz;
+    const cctx = c.getContext('2d');
+    drawIcon(cctx, sz);
+
+    const link = document.createElement('a');
+    link.download = `WalletWars-Icon-${sz}.png`;
+    link.href = c.toDataURL('image/png');
+    link.click();
+  });
+}
+</script>
+
+</body>
+</html>
