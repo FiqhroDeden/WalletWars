@@ -8,3 +8,7 @@
 - **`@Query` in ViewModels:** `@Query` does NOT work inside `@Observable` classes — only in SwiftUI Views. ViewModels must use `FetchDescriptor` + `context.fetch()` instead.
 - **SwiftData enum storage:** Enums used in `@Model` properties must have `String` raw values and conform to `Codable` for SwiftData JSON storage.
 - **SourceKit false positives:** When files exist on disk but aren't added to Xcode project, SourceKit shows "Cannot find type in scope" errors. These resolve once files are added via Xcode.
+
+## Sprint 1
+
+- **SwiftData `#Predicate` enum comparison:** `#Predicate` does NOT support shorthand enum cases (`.active`). Must use fully qualified form (`QuestStatus.active`). Error: "Member access without an explicit base is not supported in this predicate."
