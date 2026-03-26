@@ -34,6 +34,9 @@ struct WalletWarsApp: App {
                 .onAppear {
                     let context = sharedModelContainer.mainContext
                     CategorySeedService.seedIfNeeded(context: context)
+                    #if DEBUG
+                    DebugSeedService.seedIfNeeded(context: context)
+                    #endif
                 }
         }
         .modelContainer(sharedModelContainer)
