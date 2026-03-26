@@ -32,4 +32,20 @@ final class DailyLog {
         guard dailyBudget > 0 else { return 0 }
         return max(0, warChest / dailyBudget)
     }
+
+    static func fetchOrCreate(for date: Date, dailyBudget: Double, context: ModelContext) -> DailyLog {
+        let startOfDay = Calendar.current.startOfDay(for: date)
+        let nextDay = Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!
+        let descriptor = FetchDescriptor<DailyLog>(
+            predicate: #Predicate<DailyLog> { log in
+                log.date >= startOfDay && log.date < nextDay
+            }
+        )
+        if let existing = try? context.fetch(descriptor).first {
+            return existing
+        }
+        let log = DailyLog(date: date, dailyBudget: dailyBudget)
+        context.insert(log)
+        return log
+    }
 }
