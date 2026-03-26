@@ -25,7 +25,6 @@ struct QuestView: View {
             }
             .background(Color.surface)
             .navigationTitle("Quest")
-            .toolbar { newQuestToolbar }
         }
         .sheet(isPresented: $showDeposit) { depositSheet }
         .sheet(isPresented: $showNewQuest) { newQuestSheet }
@@ -216,24 +215,6 @@ private extension QuestView {
             try? viewModel?.loadQuests()
         }
         .presentationDetents([.large])
-    }
-}
-
-// MARK: - Toolbar
-
-private extension QuestView {
-    @ToolbarContentBuilder
-    var newQuestToolbar: some ToolbarContent {
-        ToolbarItem(placement: .topBarTrailing) {
-            if viewModel?.canCreateQuest ?? false {
-                Button {
-                    showNewQuest = true
-                } label: {
-                    Image(systemName: "plus")
-                        .foregroundStyle(Color.hero)
-                }
-            }
-        }
     }
 }
 
