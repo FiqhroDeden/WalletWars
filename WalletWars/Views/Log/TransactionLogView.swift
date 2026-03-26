@@ -10,6 +10,8 @@ struct TransactionLogView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel: TransactionLogViewModel?
     @State private var showFilter = false
+    @State private var showEdit = false
+    @State private var selectedTransaction: Transaction?
     @State private var filterPeriod: FilterPeriod = .thisMonth
     @State private var filterCategory: Category?
     @State private var monthlyBudget: Double = 0
@@ -19,6 +21,7 @@ struct TransactionLogView: View {
             ScrollView {
                 LazyVStack(spacing: 16) {
                     summaryCard
+                    CategoryBudgetView()
                     transactionSections
                 }
                 .padding(.horizontal, 16)
@@ -36,6 +39,22 @@ struct TransactionLogView: View {
                 onApply: { applyFilters() }
             )
             .presentationDetents([.medium])
+        }
+        .sheet(isPresented: $showEdit) {
+            if let tx = selectedTransaction {
+                EditTransactionSheet(
+                    transaction: tx,
+                    onSave: { amount, note, cat, clearCat in
+                        try? viewModel?.updateTransaction(tx, newAmount: amount, newNote: note, newCategory: cat, clearCategory: clearCat)
+                        try? viewModel?.loadTransactions()
+                    },
+                    onDelete: {
+                        try? viewModel?.deleteTransaction(tx)
+                        try? viewModel?.loadTransactions()
+                    }
+                )
+                .presentationDetents([.large])
+            }
         }
         .task { setupAndLoad() }
     }
@@ -81,6 +100,11 @@ private extension TransactionLogView {
             VStack(spacing: 0) {
                 ForEach(group.transactions, id: \.id) { transaction in
                     LogTransactionRow(transaction: transaction)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            selectedTransaction = transaction
+                            showEdit = true
+                        }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 deleteTransaction(transaction)

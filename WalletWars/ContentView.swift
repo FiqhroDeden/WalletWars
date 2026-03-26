@@ -76,13 +76,16 @@ struct ContentView: View {
         DebugSeedService.seedIfNeeded(context: modelContext)
         #endif
 
-        // 3. Check onboarding AFTER seeding completes
+        // 3. Check for week boundary — auto-create snapshot if needed
+        WeeklySnapshotService.checkAndCreateIfNeeded(context: modelContext)
+
+        // 4. Check onboarding AFTER seeding completes
         let profile = PlayerProfile.fetchOrCreate(context: modelContext)
         if !profile.hasCompletedOnboarding {
             showOnboarding = true
         }
 
-        // 4. Show main UI
+        // 5. Show main UI
         isReady = true
     }
 }
