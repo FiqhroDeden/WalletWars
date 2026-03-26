@@ -22,17 +22,18 @@
 - [x] ProfileViewModel + SettingsViewModel + tests
 - [x] Integration verification
 
-## Sprint 2: Quick Capture UI — IN PROGRESS
+## Sprint 2: Quick Capture UI — COMPLETE
 
-- [ ] QuickCaptureSheet (amount input, category grid, note field, save button)
-- [ ] AmountInput component (numeric display, auto-focused keyboard)
-- [ ] CategoryGrid component (2x4 grid, SF Symbols, selection state)
-- [ ] FAB "+" button on DashboardView
-- [ ] Success state (XP float animation, War Chest update, auto-dismiss)
-- [ ] Wire to QuickCaptureViewModel
-- [ ] Sheet presentation (.presentationDetents([.large]))
+- [x] QuickCaptureSheet (amount input, category grid, note field, save button)
+- [x] AmountInput component (numeric display, blinking cursor, transition animation)
+- [x] CategoryGrid component (2x4 grid, SF Symbols, checkmark selection)
+- [x] CaptureKeypad (custom 4x3 numeric keypad, haptic feedback)
+- [x] FAB "+" button on DashboardView
+- [x] Success state (+5 XP overlay, checkmark bounce, auto-dismiss)
+- [x] Wire to QuickCaptureViewModel
+- [x] Sheet presentation (.presentationDetents([.large]))
 
-## Sprint 3: Dashboard UI
+## Sprint 3: Dashboard UI — IN PROGRESS
 
 - [ ] WarChestCard (amount display, progress bar, state colors)
 - [ ] TodayTransactionsList (grouped by time, category icons)
