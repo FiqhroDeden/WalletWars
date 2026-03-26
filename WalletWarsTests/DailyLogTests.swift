@@ -4,9 +4,11 @@
 //
 
 import Testing
+import Foundation
 import SwiftData
 @testable import WalletWars
 
+@MainActor
 struct DailyLogTests {
 
     @Test func initializesWithStartOfDay() {

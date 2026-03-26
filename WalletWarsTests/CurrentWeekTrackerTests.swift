@@ -4,9 +4,11 @@
 //
 
 import Testing
+import Foundation
 import SwiftData
 @testable import WalletWars
 
+@MainActor
 struct CurrentWeekTrackerTests {
 
     @Test func fetchOrCreateCreatesSingleton() throws {

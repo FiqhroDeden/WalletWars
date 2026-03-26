@@ -7,6 +7,7 @@ import Testing
 import SwiftData
 @testable import WalletWars
 
+@MainActor
 struct TransactionCRUDTests {
 
     // MARK: - Create
