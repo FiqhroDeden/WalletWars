@@ -18,6 +18,16 @@ struct DashboardView: View {
                 fabButton
             }
             .navigationTitle("WalletWars")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        SettingsView()
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .foregroundStyle(Color.textMid)
+                    }
+                }
+            }
         }
         .sheet(isPresented: $showCapture) {
             QuickCaptureSheet()
