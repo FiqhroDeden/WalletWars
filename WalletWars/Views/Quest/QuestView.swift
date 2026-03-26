@@ -191,7 +191,7 @@ private extension QuestView {
 private extension QuestView {
     var depositSheet: some View {
         QuestDepositSheet(questName: viewModel?.activeQuest?.name ?? "") { amount in
-            try? viewModel?.deposit(amount: amount)
+            _ = try? viewModel?.deposit(amount: amount)
             try? viewModel?.loadQuests()
         }
         .presentationDetents([.medium])
@@ -199,7 +199,7 @@ private extension QuestView {
 
     var newQuestSheet: some View {
         NewQuestSheet { name, target, deadline in
-            try? viewModel?.createQuest(name: name, targetAmount: target, deadline: deadline)
+            _ = try? viewModel?.createQuest(name: name, targetAmount: target, deadline: deadline)
             try? viewModel?.loadQuests()
         }
         .presentationDetents([.large])
