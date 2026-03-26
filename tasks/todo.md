@@ -53,15 +53,16 @@
 - [ ] Edit transaction flow (deferred to polish sprint)
 - [ ] CategoryBudgetView (deferred to polish sprint)
 
-## Sprint 5: Gamification Services
+## Sprint 5: Gamification Services — COMPLETE
 
-- [ ] XPService (award XP for all actions)
-- [ ] StreakService (logging + budget streak logic, freeze)
-- [ ] BadgeService (12 badge unlock conditions)
-- [ ] XPFloatView animation component
-- [ ] Level-up detection + celebration
-- [ ] Integrate into QuickCapture + Quest flows
-- [ ] Unit tests for all services
+- [x] XPService (award XP, level recalculation, level-up detection)
+- [x] StreakService (logging streak with freeze, budget streak without freeze)
+- [x] BadgeService (9 profile-checkable badges, contextual unlock method)
+- [x] Integrate into QuickCapture flow (XP + streaks + badges on transaction save)
+- [x] Integrate into Quest flow (milestone XP + quest complete XP + badges)
+- [x] Unit tests: XPServiceTests (4), StreakServiceTests (8), BadgeServiceTests (10)
+- [ ] XPFloatView animation component (deferred to polish sprint)
+- [ ] Level-up celebration UI (deferred to polish sprint)
 
 ## Sprint 6: Weekly Duel
 
