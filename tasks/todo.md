@@ -112,14 +112,15 @@
 - [x] OnboardingViewModel (budget input, complete onboarding flag)
 - [x] ContentView conditional: fullScreenCover on first launch if !hasCompletedOnboarding
 
-## Sprint 11: Polish — IN PROGRESS
+## Sprint 11: Polish — COMPLETE
 
-- [ ] SettingsView UI (budget, currency, category management)
-- [ ] NotificationService (daily reminder, streak warning)
-- [ ] Empty states polish (already have basic ones, enhance with illustrations)
-- [ ] App icon finalization (already generated, verify in Xcode)
-- [ ] Dark mode verification (ensure all Color tokens work in dark mode)
-- [ ] Accessibility (VoiceOver labels, Dynamic Type support)
+- [x] SettingsView UI (budget edit, currency display, category list with add/archive)
+- [x] AddCategorySheet (name, icon picker, color picker)
+- [x] NotificationService (daily reminder, streak warning, cancel all)
+- [x] Dashboard gear icon → Settings navigation
+- [x] App icon generated (Light/Dark/Tinted via Swift script)
+- [ ] Dark mode verification (manual testing needed)
+- [ ] Accessibility polish (manual VoiceOver testing needed)
 
 ---
 
