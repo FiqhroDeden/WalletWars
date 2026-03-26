@@ -31,13 +31,6 @@ struct WalletWarsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .task {
-                    let context = sharedModelContainer.mainContext
-                    CategorySeedService.seedIfNeeded(context: context)
-                    #if DEBUG
-                    DebugSeedService.seedIfNeeded(context: context)
-                    #endif
-                }
         }
         .modelContainer(sharedModelContainer)
     }

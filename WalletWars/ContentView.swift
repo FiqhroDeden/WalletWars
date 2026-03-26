@@ -10,15 +10,36 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var selectedTab = 0
     @State private var showOnboarding = false
+    @State private var isReady = false
 
     var body: some View {
-        mainTabView
-            .task { checkOnboarding() }
-            .fullScreenCover(isPresented: $showOnboarding) {
-                OnboardingView {
-                    showOnboarding = false
-                }
+        Group {
+            if isReady {
+                mainTabView
+            } else {
+                launchScreen
             }
+        }
+        .task { initialize() }
+        .fullScreenCover(isPresented: $showOnboarding) {
+            OnboardingView {
+                showOnboarding = false
+            }
+        }
+    }
+
+    private var launchScreen: some View {
+        ZStack {
+            Color.surface.ignoresSafeArea()
+            VStack(spacing: 12) {
+                Image(systemName: "shield.fill")
+                    .font(.system(size: 40))
+                    .foregroundStyle(Color.hero)
+                Text("WalletWars")
+                    .font(.custom("PlusJakartaSans-ExtraBold", size: 24))
+                    .foregroundStyle(Color.textPrimary)
+            }
+        }
     }
 
     private var mainTabView: some View {
@@ -46,10 +67,22 @@ struct ContentView: View {
         .tint(selectedTab == 2 ? Color.rival : Color.hero)
     }
 
-    private func checkOnboarding() {
+    private func initialize() {
+        // 1. Seed categories (fast, idempotent)
+        CategorySeedService.seedIfNeeded(context: modelContext)
+
+        // 2. Debug seed data (only first launch, only DEBUG)
+        #if DEBUG
+        DebugSeedService.seedIfNeeded(context: modelContext)
+        #endif
+
+        // 3. Check onboarding AFTER seeding completes
         let profile = PlayerProfile.fetchOrCreate(context: modelContext)
         if !profile.hasCompletedOnboarding {
             showOnboarding = true
         }
+
+        // 4. Show main UI
+        isReady = true
     }
 }
