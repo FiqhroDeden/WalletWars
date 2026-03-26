@@ -130,7 +130,8 @@ final class QuestViewModel {
                 milestone.isCompleted = true
                 milestone.completedAt = .now
                 newlyCompleted.append(milestone)
-                // TODO: Sprint 5 — Award XP.questMilestone here
+                let profile = PlayerProfile.fetchOrCreate(context: context)
+                XPService.awardXP(XP.questMilestone, to: profile)
             }
         }
 
@@ -149,7 +150,8 @@ final class QuestViewModel {
 
         let profile = PlayerProfile.fetchOrCreate(context: context)
         profile.questsCompletedCount += 1
-        // TODO: Sprint 5 — Award XP.questComplete here
+        XPService.awardXP(XP.questComplete, to: profile)
+        BadgeService.checkAndUnlock(profile: profile)
 
         activeQuest = nil
     }

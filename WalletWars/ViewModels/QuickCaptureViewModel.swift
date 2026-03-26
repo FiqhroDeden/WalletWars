@@ -75,9 +75,14 @@ final class QuickCaptureViewModel {
             tracker.categorySpending[key] = (tracker.categorySpending[key] ?? 0) + amount
         }
 
-        // 4. Update PlayerProfile
+        // 4. Update PlayerProfile + Gamification
         profile.totalTransactions += 1
-        // TODO: Sprint 5 — Award XP.logTransaction here
+        XPService.awardXP(XP.logTransaction, to: profile)
+        StreakService.updateLoggingStreak(profile: profile)
+        if dailyLog.isUnderBudget {
+            StreakService.updateBudgetStreak(profile: profile)
+        }
+        BadgeService.checkAndUnlock(profile: profile)
 
         try context.save()
         return transaction
