@@ -42,15 +42,16 @@
 - [x] DashboardView layout (ScrollView with LazyVStack, all cards)
 - [x] Wire to DashboardViewModel (.task {} loading, auto-refresh on sheet dismiss)
 
-## Sprint 4: Transaction Log UI — IN PROGRESS
+## Sprint 4: Transaction Log UI — COMPLETE
 
-- [ ] TransactionLogView (grouped by date, month summary)
-- [ ] TransactionRow (category icon, amount, note, time)
-- [ ] FilterSheet (date range, category, sort order)
-- [ ] Edit transaction flow
-- [ ] Delete transaction (swipe action)
-- [ ] CategoryBudgetView (per-category spending)
-- [ ] Wire to TransactionLogViewModel
+- [x] TransactionLogView (date-grouped sections with headers)
+- [x] LogTransactionRow (category icon, amount in red, note, time)
+- [x] MonthSummaryCard (spent/budget progress bar, percentage)
+- [x] FilterSheet (period chips, category chips, flow layout, Reset/Apply)
+- [x] Delete transaction (swipe-to-delete action)
+- [x] Wire to TransactionLogViewModel (.task {} loading, filter apply)
+- [ ] Edit transaction flow (deferred to polish sprint)
+- [ ] CategoryBudgetView (deferred to polish sprint)
 
 ## Sprint 5: Gamification Services
 
