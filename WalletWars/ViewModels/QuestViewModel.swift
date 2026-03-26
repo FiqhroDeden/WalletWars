@@ -31,14 +31,14 @@ final class QuestViewModel {
     func loadQuests() throws {
         let activeDescriptor = FetchDescriptor<SavingQuest>(
             predicate: #Predicate<SavingQuest> { quest in
-                quest.status == .active
+                quest.status == QuestStatus.active
             }
         )
         activeQuest = try context.fetch(activeDescriptor).first
 
         let completedDescriptor = FetchDescriptor<SavingQuest>(
             predicate: #Predicate<SavingQuest> { quest in
-                quest.status == .completed
+                quest.status == QuestStatus.completed
             },
             sortBy: [SortDescriptor(\.completedAt, order: .reverse)]
         )
@@ -54,7 +54,7 @@ final class QuestViewModel {
         // Enforce max 1 active
         let activeDescriptor = FetchDescriptor<SavingQuest>(
             predicate: #Predicate<SavingQuest> { quest in
-                quest.status == .active
+                quest.status == QuestStatus.active
             }
         )
         let activeCount = try context.fetchCount(activeDescriptor)
