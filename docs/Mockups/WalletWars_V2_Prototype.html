@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>WalletWars V2 — War Base & Companion</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --void: #060A14;
+  --deep: #0A1020;
+  --surface: #0F1628;
+  --surface-hi: #1A2340;
+  --surface-top: #243054;
+  --glass: rgba(20, 32, 60, 0.65);
+  --glass-border: rgba(255,255,255,0.07);
+
+  --hero: #5B9CFF;
+  --hero-deep: #1B6EF2;
+  --hero-glow: rgba(91,156,255,0.35);
+  --rival: #FF6B52;
+  --rival-glow: rgba(255,107,82,0.3);
+  --victory: #5EEAA0;
+  --victory-glow: rgba(94,234,160,0.3);
+  --amber: #F5A623;
+  --amber-glow: rgba(245,166,35,0.3);
+  --text: #D8DEEF;
+  --text-dim: #7A82A0;
+  --text-faint: #4A5270;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background: var(--void); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; min-height: 100dvh; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+.tactical { font-family: 'Chakra Petch', sans-serif; }
+
+/* ---- SCREEN SYSTEM ---- */
+.v2-screen { display:none; min-height:100dvh; position:relative; }
+.v2-screen.active { display:block; animation: v2In 0.4s cubic-bezier(0.22,1,0.36,1); }
+@keyframes v2In { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ---- GLASS PANELS ---- */
+.glass { background:var(--glass); backdrop-filter:blur(24px) saturate(130%); -webkit-backdrop-filter:blur(24px) saturate(130%); border:1px solid var(--glass-border); border-radius:20px; }
+.glass-sm { background:var(--glass); backdrop-filter:blur(16px) saturate(120%); -webkit-backdrop-filter:blur(16px) saturate(120%); border:1px solid var(--glass-border); border-radius:14px; }
+
+/* ---- ANIMATIONS ---- */
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes pulse-soft { 0%,100%{opacity:0.6} 50%{opacity:1} }
+@keyframes shield-glow { 0%,100%{filter:drop-shadow(0 0 8px var(--victory-glow))} 50%{filter:drop-shadow(0 0 24px var(--victory-glow))} }
+@keyframes patrol { 0%{transform:translateX(0)} 50%{transform:translateX(30px)} 100%{transform:translateX(0)} }
+@keyframes patrol-r { 0%{transform:translateX(0) scaleX(-1)} 50%{transform:translateX(-25px) scaleX(-1)} 100%{transform:translateX(0) scaleX(-1)} }
+@keyframes bob { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-4px) rotate(1deg)} }
+@keyframes blink { 0%,42%,46%,100%{transform:scaleY(1)} 44%{transform:scaleY(0.1)} }
+@keyframes wave-flag { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg)} }
+@keyframes sparkle { 0%,100%{opacity:0;transform:scale(0)} 50%{opacity:1;transform:scale(1)} }
+@keyframes cloud-drift { 0%{transform:translateX(-120px)} 100%{transform:translateX(calc(100vw + 120px))} }
+@keyframes ripple { 0%{transform:scale(1);opacity:0.4} 100%{transform:scale(2.5);opacity:0} }
+@keyframes tier-glow { 0%,100%{box-shadow:0 0 20px var(--hero-glow), inset 0 0 20px rgba(91,156,255,0.05)} 50%{box-shadow:0 0 40px var(--hero-glow), inset 0 0 30px rgba(91,156,255,0.1)} }
+@keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.02)} }
+@keyframes troop-walk { 0%{transform:translateX(0)} 25%{transform:translateX(8px) translateY(-2px)} 50%{transform:translateX(16px)} 75%{transform:translateX(8px) translateY(-2px)} 100%{transform:translateX(0)} }
+
+.float { animation: float 4s ease-in-out infinite; }
+.breathe { animation: breathe 6s ease-in-out infinite; }
+.shield-glow { animation: shield-glow 3s ease-in-out infinite; }
+
+/* ---- PARTICLES ---- */
+.particle {
+  position:absolute; width:3px; height:3px; background:var(--hero); border-radius:50%;
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+/* ---- BOTTOM NAV ---- */
+.v2-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  display:flex; justify-content:space-around; align-items:center;
+  padding: 12px 16px 28px; background: rgba(10,16,32,0.9);
+  backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+  border-top: 1px solid var(--glass-border);
+}
+.v2-nav button {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  background:none; border:none; color:var(--text-faint); cursor:pointer;
+  font-family:'Plus Jakarta Sans'; font-size:9px; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.1em; transition:all 0.25s;
+}
+.v2-nav button.active { color:var(--hero); }
+.v2-nav button svg { width:22px; height:22px; transition:transform 0.25s; }
+.v2-nav button.active svg { transform:scale(1.15); }
+
+/* ---- COMPANION ---- */
+.companion-container {
+  position:absolute; bottom:160px; right:20px; z-index:20;
+  animation: bob 3s ease-in-out infinite;
+}
+.speech-bubble {
+  position:absolute; bottom:100%; right:0; width:220px;
+  background:var(--glass); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border); border-radius:16px 16px 4px 16px;
+  padding:14px 16px; font-size:12px; line-height:1.5; color:var(--text);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  opacity:0; transform:translateY(8px) scale(0.95);
+  transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.speech-bubble.show { opacity:1; transform:translateY(-8px) scale(1); }
+
+/* ---- ISOMETRIC BASE ---- */
+.iso-world {
+  position:relative; width:100%; height:480px;
+  perspective: 800px; overflow:hidden;
+}
+.iso-ground {
+  position:absolute; left:50%; top:55%; transform:translate(-50%,-50%) rotateX(55deg) rotateZ(45deg);
+  width:280px; height:280px;
+}
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar { width:0; }
+</style>
+</head>
+<body>
+
+<!-- ===== SCREEN 1: WAR BASE DASHBOARD ===== -->
+<div id="s-warbase" class="v2-screen active">
+  <!-- Sky gradient background -->
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg, #0B1628 0%, #0A1833 30%, #091428 60%, var(--void) 100%);pointer-events:none;"></div>
+
+  <!-- Stars -->
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
+    <div class="particle" style="top:8%;left:15%;animation-delay:0s;"></div>
+    <div class="particle" style="top:12%;left:65%;animation-delay:0.8s;width:2px;height:2px;background:var(--victory);"></div>
+    <div class="particle" style="top:5%;left:80%;animation-delay:1.6s;"></div>
+    <div class="particle" style="top:18%;left:35%;animation-delay:2.4s;width:2px;height:2px;"></div>
+    <div class="particle" style="top:3%;left:50%;animation-delay:0.4s;background:var(--amber);width:2px;height:2px;"></div>
+    <div class="particle" style="top:15%;left:90%;animation-delay:1.2s;"></div>
+  </div>
+
+  <!-- Clouds -->
+  <div style="position:absolute;top:80px;left:0;right:0;height:200px;overflow:hidden;pointer-events:none;opacity:0.15;">
+    <div style="position:absolute;top:20px;width:100px;height:30px;background:radial-gradient(ellipse, white 0%, transparent 70%);border-radius:50%;animation:cloud-drift 25s linear infinite;"></div>
+    <div style="position:absolute;top:80px;width:140px;height:35px;background:radial-gradient(ellipse, white 0%, transparent 70%);border-radius:50%;animation:cloud-drift 35s linear infinite;animation-delay:8s;"></div>
+  </div>
+
+  <!-- Top HUD -->
+  <header style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:flex-start;padding:16px 20px;">
+    <div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <svg width="28" height="28" viewBox="0 0 80 80" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#5B9CFF"/><stop offset="100%" stop-color="#1B6EF2"/></linearGradient></defs>
+          <path d="M40 4L72 20V50C72 64 56 74 40 78C24 74 8 64 8 50V20L40 4Z" fill="url(#lg)" opacity="0.2" stroke="url(#lg)" stroke-width="2.5"/>
+          <text x="40" y="50" text-anchor="middle" font-family="Plus Jakarta Sans" font-weight="800" font-size="24" fill="url(#lg)">WW</text>
+        </svg>
+        <span style="font-weight:800;font-size:16px;color:var(--hero);font-style:italic;letter-spacing:-0.5px;">WalletWars</span>
+      </div>
+      <div class="glass-sm" style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;">
+        <span style="font-size:10px;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Tier 3</span>
+        <span style="color:var(--amber);font-weight:800;font-size:13px;" class="tactical">STRONGHOLD</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+      <div class="glass-sm" style="display:flex;align-items:center;gap:10px;padding:6px 14px;">
+        <div style="display:flex;align-items:center;gap:4px;">
+          <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#F5A623"/><text x="7" y="10" text-anchor="middle" font-size="8" fill="#7a5000" font-weight="bold">$</text></svg>
+          <span class="mono" style="font-weight:700;font-size:12px;color:var(--amber);">8,640</span>
+        </div>
+        <span style="color:var(--text-faint);">|</span>
+        <span class="tactical" style="font-weight:600;font-size:11px;color:var(--text-dim);">Lv.8</span>
+      </div>
+      <div class="glass-sm" style="display:flex;align-items:center;gap:6px;padding:5px 12px;">
+        <svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1L11 4V8C11 10 8 11.5 6 12C4 11.5 1 10 1 8V4L6 1Z" fill="var(--victory)" opacity="0.8"/></svg>
+        <span class="mono" style="font-size:11px;font-weight:600;color:var(--victory);">$125.00</span>
+        <span style="font-size:9px;color:var(--text-faint);">left today</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- === ISOMETRIC FORTRESS === -->
+  <div class="iso-world" style="margin-top:90px;">
+    <!-- Island & water effects -->
+    <div style="position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);width:320px;height:220px;">
+      <!-- Water ripples -->
+      <div style="position:absolute;bottom:-20px;left:20%;width:40px;height:40px;border:1.5px solid rgba(91,156,255,0.15);border-radius:50%;animation:ripple 4s ease-out infinite;"></div>
+      <div style="position:absolute;bottom:-10px;right:25%;width:30px;height:30px;border:1.5px solid rgba(91,156,255,0.1);border-radius:50%;animation:ripple 5s ease-out infinite;animation-delay:2s;"></div>
+
+      <!-- Floating island base -->
+      <svg viewBox="0 0 320 220" width="320" height="220" class="breathe">
+        <defs>
+          <linearGradient id="island" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1A3055"/>
+            <stop offset="60%" stop-color="#122040"/>
+            <stop offset="100%" stop-color="#0A1428"/>
+          </linearGradient>
+          <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2A4070"/>
+            <stop offset="100%" stop-color="#1A2D55"/>
+          </linearGradient>
+          <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5B9CFF"/>
+            <stop offset="100%" stop-color="#3060B0"/>
+          </linearGradient>
+          <linearGradient id="towerGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3A5A90"/>
+            <stop offset="100%" stop-color="#1E3560"/>
+          </linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow-lg"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+
+        <!-- Island platform -->
+        <path d="M160 185 L280 140 L280 155 C280 170 230 195 160 200 C90 195 40 170 40 155 L40 140 Z" fill="#0E1A30"/>
+        <ellipse cx="160" cy="140" rx="120" ry="45" fill="url(#island)"/>
+        <ellipse cx="160" cy="140" rx="100" ry="36" fill="#15253F" opacity="0.6"/>
+
+        <!-- Ground detail - paths -->
+        <ellipse cx="160" cy="138" rx="70" ry="25" fill="none" stroke="#1E3555" stroke-width="0.5" stroke-dasharray="4 3"/>
+
+        <!-- === FORTRESS STRUCTURES === -->
+
+        <!-- Left Tower -->
+        <g>
+          <rect x="75" y="68" width="30" height="65" rx="2" fill="url(#towerGrad)"/>
+          <rect x="72" y="63" width="36" height="8" rx="2" fill="url(#wallGrad)"/>
+          <!-- Tower battlements -->
+          <rect x="72" y="58" width="8" height="8" rx="1" fill="#2A4575"/>
+          <rect x="86" y="58" width="8" height="8" rx="1" fill="#2A4575"/>
+          <rect x="100" y="58" width="8" height="8" rx="1" fill="#2A4575"/>
+          <!-- Window glow -->
+          <rect x="86" y="80" width="8" height="10" rx="1" fill="#1B6EF2" opacity="0.6" filter="url(#glow)"/>
+          <rect x="86" y="100" width="8" height="10" rx="1" fill="#1B6EF2" opacity="0.4" filter="url(#glow)"/>
+          <!-- Flag -->
+          <line x1="90" y1="58" x2="90" y2="40" stroke="#4A6A9A" stroke-width="1.5"/>
+          <g style="transform-origin:90px 45px;animation:wave-flag 2s ease-in-out infinite;">
+            <path d="M90 40 L108 45 L90 50Z" fill="var(--hero)" opacity="0.8"/>
+          </g>
+        </g>
+
+        <!-- Main Keep (center) -->
+        <g>
+          <rect x="130" y="55" width="60" height="78" rx="3" fill="url(#wallGrad)"/>
+          <!-- Roof -->
+          <polygon points="130,55 160,30 190,55" fill="url(#roofGrad)"/>
+          <!-- Door -->
+          <rect x="150" y="105" width="20" height="28" rx="10" fill="#0A1428"/>
+          <rect x="150" y="105" width="20" height="28" rx="10" fill="var(--hero)" opacity="0.15"/>
+          <!-- Door glow -->
+          <ellipse cx="160" cy="130" rx="12" ry="4" fill="var(--hero)" opacity="0.15" filter="url(#glow)"/>
+          <!-- Windows -->
+          <rect x="138" y="70" width="10" height="14" rx="2" fill="#1B6EF2" opacity="0.5" filter="url(#glow)"/>
+          <rect x="172" y="70" width="10" height="14" rx="2" fill="#1B6EF2" opacity="0.5" filter="url(#glow)"/>
+          <rect x="155" y="60" width="10" height="12" rx="5" fill="#1B6EF2" opacity="0.7" filter="url(#glow)"/>
+          <!-- Shield emblem -->
+          <g filter="url(#glow)" class="shield-glow">
+            <path d="M160 85 L170 90 L170 98 C170 103 165 106 160 108 C155 106 150 103 150 98 L150 90 Z" fill="var(--victory)" opacity="0.6"/>
+          </g>
+          <!-- Spire -->
+          <line x1="160" y1="30" x2="160" y2="15" stroke="#5B9CFF" stroke-width="2"/>
+          <circle cx="160" cy="14" r="3" fill="var(--amber)" filter="url(#glow)"/>
+        </g>
+
+        <!-- Right Tower -->
+        <g>
+          <rect x="215" y="72" width="28" height="58" rx="2" fill="url(#towerGrad)"/>
+          <rect x="212" y="67" width="34" height="8" rx="2" fill="url(#wallGrad)"/>
+          <rect x="212" y="62" width="8" height="8" rx="1" fill="#2A4575"/>
+          <rect x="224" y="62" width="8" height="8" rx="1" fill="#2A4575"/>
+          <rect x="238" y="62" width="8" height="8" rx="1" fill="#2A4575"/>
+          <rect x="225" y="84" width="8" height="10" rx="1" fill="var(--victory)" opacity="0.4" filter="url(#glow)"/>
+          <rect x="225" y="104" width="8" height="8" rx="1" fill="var(--amber)" opacity="0.3" filter="url(#glow)"/>
+        </g>
+
+        <!-- Walls connecting towers -->
+        <rect x="105" y="100" width="25" height="30" rx="1" fill="#1E3358" opacity="0.8"/>
+        <rect x="190" y="102" width="25" height="28" rx="1" fill="#1E3358" opacity="0.8"/>
+        <!-- Wall battlements -->
+        <rect x="105" y="96" width="6" height="6" rx="1" fill="#253D60"/>
+        <rect x="115" y="96" width="6" height="6" rx="1" fill="#253D60"/>
+        <rect x="125" y="96" width="6" height="6" rx="1" fill="#253D60"/>
+        <rect x="190" y="98" width="6" height="6" rx="1" fill="#253D60"/>
+        <rect x="200" y="98" width="6" height="6" rx="1" fill="#253D60"/>
+        <rect x="210" y="98" width="6" height="6" rx="1" fill="#253D60"/>
+
+        <!-- Moat glow -->
+        <ellipse cx="160" cy="142" rx="105" ry="38" fill="none" stroke="var(--hero)" stroke-width="1" opacity="0.15" filter="url(#glow-lg)"/>
+
+        <!-- === TROOPS === -->
+        <!-- Scout patrolling left -->
+        <g style="animation: troop-walk 6s ease-in-out infinite;">
+          <circle cx="68" cy="128" r="4" fill="#5B9CFF" opacity="0.8"/>
+          <rect x="66" y="130" width="4" height="6" rx="1" fill="#3060B0"/>
+          <circle cx="68" cy="126" r="1.5" fill="#D8DEEF"/>
+        </g>
+        <!-- Guard at door -->
+        <g>
+          <circle cx="143" cy="126" r="4" fill="var(--victory)" opacity="0.8"/>
+          <rect x="141" y="128" width="4" height="7" rx="1" fill="#006839"/>
+          <rect x="139" y="122" width="2" height="10" rx="0.5" fill="#7A82A0"/>
+          <circle cx="143" cy="124" r="1.5" fill="#D8DEEF"/>
+        </g>
+        <!-- Knight at right -->
+        <g style="animation: troop-walk 8s ease-in-out infinite; animation-delay: 2s;">
+          <circle cx="248" cy="124" r="4.5" fill="var(--amber)" opacity="0.8"/>
+          <rect x="245.5" y="126" width="5" height="7" rx="1" fill="#8B6914"/>
+          <circle cx="248" cy="122" r="1.8" fill="#D8DEEF"/>
+        </g>
+      </svg>
+
+      <!-- Shield barrier effect (when streak active) -->
+      <div style="position:absolute;inset:-20px;border-radius:50%;border:2px solid var(--victory);opacity:0.08;animation:breathe 4s ease-in-out infinite;"></div>
+    </div>
+  </div>
+
+  <!-- === COMPANION === -->
+  <div class="companion-container" id="companion">
+    <div class="speech-bubble show" id="companionSpeech">
+      <div style="font-size:9px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Scout Reports</div>
+      Food spending dropped <span style="color:var(--victory);font-weight:700;">15%</span> this week. The fortress grows stronger, Commander!
+    </div>
+    <!-- Fox companion SVG -->
+    <svg width="64" height="64" viewBox="0 0 64 64" style="cursor:pointer;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5));" onclick="cycleCompanionMessage()">
+      <!-- Body -->
+      <ellipse cx="32" cy="44" rx="16" ry="14" fill="#E8C17A"/>
+      <!-- Armor plate -->
+      <path d="M20 40 Q32 32 44 40 L42 50 Q32 54 22 50 Z" fill="#3A6AAA" opacity="0.8"/>
+      <path d="M24 42 Q32 36 40 42 L38 48 Q32 51 26 48 Z" fill="#5B9CFF" opacity="0.4"/>
+      <!-- Head -->
+      <circle cx="32" cy="28" r="12" fill="#F0D08A"/>
+      <!-- Ears -->
+      <path d="M20 22 L24 10 L28 22Z" fill="#E8C17A"/>
+      <path d="M36 22 L40 10 L44 22Z" fill="#E8C17A"/>
+      <path d="M22 20 L25 13 L27 21Z" fill="#F5DDA5"/>
+      <path d="M37 21 L39 13 L42 20Z" fill="#F5DDA5"/>
+      <!-- Eyes -->
+      <g style="transform-origin:28px 27px;animation:blink 4s ease-in-out infinite;">
+        <circle cx="27" cy="27" r="3.5" fill="#1A2340"/>
+        <circle cx="28" cy="26" r="1.2" fill="white"/>
+      </g>
+      <g style="transform-origin:37px 27px;animation:blink 4s ease-in-out infinite;animation-delay:0.1s;">
+        <circle cx="37" cy="27" r="3.5" fill="#1A2340"/>
+        <circle cx="38" cy="26" r="1.2" fill="white"/>
+      </g>
+      <!-- Nose -->
+      <ellipse cx="32" cy="31" rx="2" ry="1.5" fill="#3A2A10"/>
+      <!-- Mouth -->
+      <path d="M30 33 Q32 35 34 33" fill="none" stroke="#3A2A10" stroke-width="0.8"/>
+      <!-- Helmet -->
+      <path d="M22 24 Q32 16 42 24" fill="#3A6AAA" opacity="0.6"/>
+      <circle cx="32" cy="18" r="2" fill="var(--amber)" opacity="0.8"/>
+      <!-- Shield in paw -->
+      <g style="transform-origin:48px 44px;animation:bob 3s ease-in-out infinite alternate;">
+        <path d="M46 38 L52 40 L52 46 C52 49 49 51 48 52 C47 51 44 49 44 46 L44 40 Z" fill="var(--victory)" opacity="0.7"/>
+        <path d="M47 41 L50 42 L50 45 C50 47 49 48 48 48.5 C47 48 46 47 46 45 L46 42 Z" fill="var(--victory)" opacity="0.3"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- === BOTTOM CARDS (overlaying world) === -->
+  <div style="position:absolute;bottom:90px;left:0;right:0;padding:0 16px;">
+    <!-- Streak + War Chest mini bar -->
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <div class="glass-sm" style="flex:1;padding:10px 14px;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:16px;">🔥</span>
+        <div>
+          <div style="font-size:9px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Log Streak</div>
+          <div style="font-weight:800;font-size:15px;">14 <span style="font-size:10px;color:var(--text-dim);font-weight:600;">days</span></div>
+        </div>
+      </div>
+      <div class="glass-sm" style="flex:1;padding:10px 14px;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:16px;">🛡</span>
+        <div>
+          <div style="font-size:9px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;">Budget Streak</div>
+          <div style="font-weight:800;font-size:15px;">7 <span style="font-size:10px;color:var(--text-dim);font-weight:600;">days</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick transaction peek -->
+    <div class="glass" style="padding:14px 18px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-size:10px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Latest</span>
+        <span style="font-size:10px;color:var(--hero);font-weight:700;cursor:pointer;">View All</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,107,82,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;">🍔</div>
+          <div>
+            <div style="font-weight:700;font-size:13px;">Cyber Cafe Brunch</div>
+            <div style="font-size:10px;color:var(--text-dim);">12:42 PM</div>
+          </div>
+        </div>
+        <span class="mono" style="font-weight:700;color:var(--rival);font-size:14px;">-$24.50</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <button onclick="switchV2('capture')" style="position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:40;width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,#5B9CFF,#1B6EF2);color:white;font-size:28px;cursor:pointer;box-shadow:0 8px 32px var(--hero-glow);display:flex;align-items:center;justify-content:center;transition:transform 0.2s;">+</button>
+</div>
+
+<!-- ===== SCREEN 2: BASE EVOLUTION ===== -->
+<div id="s-evolution" class="v2-screen">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#0B1628,var(--void));pointer-events:none;"></div>
+  <div style="padding:60px 20px 120px;position:relative;">
+    <h2 style="font-weight:800;font-size:22px;margin-bottom:4px;">Fortress Evolution</h2>
+    <p style="font-size:12px;color:var(--text-dim);margin-bottom:28px;">Your base grows stronger with every disciplined week.</p>
+
+    <!-- Timeline -->
+    <div style="position:relative;padding-left:32px;">
+      <!-- Vertical line -->
+      <div style="position:absolute;left:11px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--hero),var(--hero) 50%,var(--surface-hi) 50%);border-radius:1px;"></div>
+
+      <!-- Tier 1 - Completed -->
+      <div style="position:relative;margin-bottom:28px;">
+        <div style="position:absolute;left:-28px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--hero);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:800;box-shadow:0 0 12px var(--hero-glow);">✓</div>
+        <div class="glass-sm" style="padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+            <div>
+              <span class="tactical" style="font-size:10px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.1em;">Tier 1</span>
+              <h3 style="font-weight:800;font-size:16px;color:var(--hero);">Outpost</h3>
+            </div>
+            <span style="font-size:9px;color:var(--victory);font-weight:700;background:rgba(94,234,160,0.1);padding:3px 10px;border-radius:20px;">COMPLETE</span>
+          </div>
+          <p style="font-size:11px;color:var(--text-dim);line-height:1.5;">Small tent, wooden fence, single flag. Your journey begins here.</p>
+        </div>
+      </div>
+
+      <!-- Tier 2 - Completed -->
+      <div style="position:relative;margin-bottom:28px;">
+        <div style="position:absolute;left:-28px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--hero);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:800;box-shadow:0 0 12px var(--hero-glow);">✓</div>
+        <div class="glass-sm" style="padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+            <div>
+              <span class="tactical" style="font-size:10px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.1em;">Tier 2</span>
+              <h3 style="font-weight:800;font-size:16px;color:var(--hero);">Camp</h3>
+            </div>
+            <span style="font-size:9px;color:var(--victory);font-weight:700;background:rgba(94,234,160,0.1);padding:3px 10px;border-radius:20px;">COMPLETE</span>
+          </div>
+          <p style="font-size:11px;color:var(--text-dim);line-height:1.5;">Stone walls, watchtower, campfire. First duel victory earned.</p>
+        </div>
+      </div>
+
+      <!-- Tier 3 - Current -->
+      <div style="position:relative;margin-bottom:28px;">
+        <div style="position:absolute;left:-28px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#3A2A10;box-shadow:0 0 12px var(--amber-glow);animation:pulse-soft 2s infinite;">3</div>
+        <div class="glass" style="padding:18px;animation:tier-glow 4s ease-in-out infinite;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+            <div>
+              <span class="tactical" style="font-size:10px;color:var(--amber);font-weight:600;text-transform:uppercase;letter-spacing:0.1em;">Tier 3 — Current</span>
+              <h3 style="font-weight:800;font-size:18px;">Stronghold</h3>
+            </div>
+            <span style="font-size:9px;color:var(--amber);font-weight:700;background:rgba(245,166,35,0.1);padding:3px 10px;border-radius:20px;">ACTIVE</span>
+          </div>
+          <p style="font-size:11px;color:var(--text-dim);line-height:1.5;margin-bottom:12px;">Iron walls, two towers, armory building. You've proven your discipline.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span style="font-size:10px;padding:4px 10px;border-radius:20px;background:rgba(91,156,255,0.1);color:var(--hero);font-weight:600;">Level 5+ ✓</span>
+            <span style="font-size:10px;padding:4px 10px;border-radius:20px;background:rgba(94,234,160,0.1);color:var(--victory);font-weight:600;">3 Duel Wins ✓</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 4 - Locked -->
+      <div style="position:relative;margin-bottom:28px;opacity:0.5;">
+        <div style="position:absolute;left:-28px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--surface-hi);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--text-faint);">4</div>
+        <div class="glass-sm" style="padding:16px;">
+          <div style="margin-bottom:8px;">
+            <span class="tactical" style="font-size:10px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.1em;">Tier 4</span>
+            <h3 style="font-weight:800;font-size:16px;color:var(--text-dim);">Fortress</h3>
+          </div>
+          <p style="font-size:11px;color:var(--text-faint);line-height:1.5;">Full stone fortress, moat, banners. Requires Level 10 + first quest complete.</p>
+          <div style="display:flex;gap:6px;margin-top:8px;">
+            <span style="font-size:10px;padding:4px 10px;border-radius:20px;background:var(--surface-hi);color:var(--text-faint);font-weight:600;">Level 10</span>
+            <span style="font-size:10px;padding:4px 10px;border-radius:20px;background:var(--surface-hi);color:var(--text-faint);font-weight:600;">1 Quest Done</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tier 5 - Locked -->
+      <div style="position:relative;margin-bottom:28px;opacity:0.3;">
+        <div style="position:absolute;left:-28px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--surface-hi);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--text-faint);">5</div>
+        <div class="glass-sm" style="padding:16px;">
+          <span class="tactical" style="font-size:10px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.1em;">Tier 5</span>
+          <h3 style="font-weight:800;font-size:16px;color:var(--text-faint);">Citadel</h3>
+          <p style="font-size:11px;color:var(--text-faint);line-height:1.5;margin-top:6px;">Grand citadel with glowing shields. Level 15 + 5 quests + 10 wins.</p>
+        </div>
+      </div>
+
+      <!-- Tier 6 - Locked -->
+      <div style="position:relative;opacity:0.2;">
+        <div style="position:absolute;left:-28px;top:4px;width:18px;height:18px;border-radius:50%;background:var(--surface-hi);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--text-faint);">6</div>
+        <div class="glass-sm" style="padding:16px;">
+          <span class="tactical" style="font-size:10px;color:var(--text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.1em;">Tier 6</span>
+          <h3 style="font-weight:800;font-size:16px;color:var(--text-faint);">War Palace</h3>
+          <p style="font-size:11px;color:var(--text-faint);line-height:1.5;margin-top:6px;">Legendary. Only for true Wealth Guardians.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: COLLECTION BOOK ===== -->
+<div id="s-collection" class="v2-screen">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#0B1628,var(--void));pointer-events:none;"></div>
+  <div style="padding:60px 20px 120px;position:relative;">
+    <h2 style="font-weight:800;font-size:22px;margin-bottom:4px;">Collection Book</h2>
+    <p style="font-size:12px;color:var(--text-dim);margin-bottom:24px;">Troops, decorations, and trophies earned through discipline.</p>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:20px;">
+      <button onclick="collTab('troops')" id="ct-troops" style="flex:1;padding:10px;border-radius:12px;border:none;font-family:'Plus Jakarta Sans';font-weight:700;font-size:12px;cursor:pointer;background:linear-gradient(135deg,#5B9CFF,#1B6EF2);color:white;box-shadow:0 4px 16px var(--hero-glow);">Troops</button>
+      <button onclick="collTab('decor')" id="ct-decor" style="flex:1;padding:10px;border-radius:12px;border:1px solid var(--glass-border);font-family:'Plus Jakarta Sans';font-weight:700;font-size:12px;cursor:pointer;background:var(--surface-hi);color:var(--text-dim);">Decorations</button>
+      <button onclick="collTab('trophy')" id="ct-trophy" style="flex:1;padding:10px;border-radius:12px;border:1px solid var(--glass-border);font-family:'Plus Jakarta Sans';font-weight:700;font-size:12px;cursor:pointer;background:var(--surface-hi);color:var(--text-dim);">Trophies</button>
+    </div>
+
+    <!-- Troops Grid -->
+    <div id="coll-troops" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <!-- Earned -->
+      <div class="glass-sm" style="padding:16px;text-align:center;">
+        <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:50%;background:rgba(91,156,255,0.15);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 28 28">
+            <circle cx="14" cy="10" r="6" fill="#5B9CFF"/>
+            <rect x="10" y="15" width="8" height="10" rx="2" fill="#3060B0"/>
+            <circle cx="14" cy="8" r="2.5" fill="#D8DEEF"/>
+          </svg>
+        </div>
+        <div style="font-size:11px;font-weight:700;">Scout</div>
+        <div style="font-size:9px;color:var(--text-faint);margin-top:2px;">x3 Patrolling</div>
+        <div style="font-size:8px;color:var(--victory);margin-top:4px;font-weight:600;">EARNED</div>
+      </div>
+      <div class="glass-sm" style="padding:16px;text-align:center;">
+        <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:50%;background:rgba(94,234,160,0.15);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 28 28">
+            <circle cx="14" cy="10" r="6" fill="#5EEAA0"/>
+            <rect x="10" y="15" width="8" height="10" rx="2" fill="#006839"/>
+            <rect x="8" y="8" width="2" height="12" rx="0.5" fill="#7A82A0"/>
+            <circle cx="14" cy="8" r="2.5" fill="#D8DEEF"/>
+          </svg>
+        </div>
+        <div style="font-size:11px;font-weight:700;">Guard</div>
+        <div style="font-size:9px;color:var(--text-faint);margin-top:2px;">x2 At Gates</div>
+        <div style="font-size:8px;color:var(--victory);margin-top:4px;font-weight:600;">EARNED</div>
+      </div>
+      <div class="glass-sm" style="padding:16px;text-align:center;">
+        <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:50%;background:rgba(245,166,35,0.15);display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 28 28">
+            <circle cx="14" cy="10" r="6" fill="#F5A623"/>
+            <rect x="10" y="15" width="8" height="10" rx="2" fill="#8B6914"/>
+            <circle cx="14" cy="8" r="2.5" fill="#D8DEEF"/>
+            <path d="M14 3L16 6H12Z" fill="#F5A623"/>
+          </svg>
+        </div>
+        <div style="font-size:11px;font-weight:700;">Knight</div>
+        <div style="font-size:9px;color:var(--text-faint);margin-top:2px;">x1 In Arena</div>
+        <div style="font-size:8px;color:var(--victory);margin-top:4px;font-weight:600;">EARNED</div>
+      </div>
+      <!-- Locked -->
+      <div class="glass-sm" style="padding:16px;text-align:center;opacity:0.3;">
+        <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:50%;background:var(--surface-hi);display:flex;align-items:center;justify-content:center;font-size:20px;">🔒</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-faint);">Merchant</div>
+        <div style="font-size:9px;color:var(--text-faint);margin-top:2px;">Quest deposits</div>
+      </div>
+      <div class="glass-sm" style="padding:16px;text-align:center;opacity:0.3;">
+        <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:50%;background:var(--surface-hi);display:flex;align-items:center;justify-content:center;font-size:20px;">🔒</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-faint);">Engineer</div>
+        <div style="font-size:9px;color:var(--text-faint);margin-top:2px;">Category control</div>
+      </div>
+      <div class="glass-sm" style="padding:16px;text-align:center;opacity:0.2;">
+        <div style="width:48px;height:48px;margin:0 auto 8px;border-radius:50%;background:var(--surface-hi);display:flex;align-items:center;justify-content:center;font-size:20px;">🔒</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-faint);">Champion</div>
+        <div style="font-size:9px;color:var(--text-faint);margin-top:2px;">Legendary feats</div>
+      </div>
+    </div>
+
+    <!-- Decorations (hidden) -->
+    <div id="coll-decor" style="display:none;grid-template-columns:repeat(2,1fr);gap:10px;">
+      <div class="glass-sm" style="padding:16px;display:flex;align-items:center;gap:12px;">
+        <div style="font-size:28px;">🏴</div>
+        <div>
+          <div style="font-size:12px;font-weight:700;">Victory Banners</div>
+          <div style="font-size:10px;color:var(--text-dim);">8 on fortress walls</div>
+          <div style="font-size:9px;color:var(--hero);margin-top:2px;font-weight:600;">1 per duel win</div>
+        </div>
+      </div>
+      <div class="glass-sm" style="padding:16px;display:flex;align-items:center;gap:12px;">
+        <div style="font-size:28px;">🔥</div>
+        <div>
+          <div style="font-size:12px;font-weight:700;">Eternal Flame</div>
+          <div style="font-size:10px;color:var(--text-dim);">Central courtyard</div>
+          <div style="font-size:9px;color:var(--amber);margin-top:2px;font-weight:600;">14-day streak</div>
+        </div>
+      </div>
+      <div class="glass-sm" style="padding:16px;display:flex;align-items:center;gap:12px;">
+        <div style="font-size:28px;">⚔️</div>
+        <div>
+          <div style="font-size:12px;font-weight:700;">War Memorial</div>
+          <div style="font-size:10px;color:var(--text-dim);">Arena entrance</div>
+          <div style="font-size:9px;color:var(--victory);margin-top:2px;font-weight:600;">10 duel wins</div>
+        </div>
+      </div>
+      <div class="glass-sm" style="padding:16px;display:flex;align-items:center;gap:12px;opacity:0.35;">
+        <div style="font-size:28px;">🔒</div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--text-faint);">Golden Gate</div>
+          <div style="font-size:10px;color:var(--text-faint);">Complete 5 quests</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trophies (hidden) -->
+    <div id="coll-trophy" style="display:none;grid-template-columns:1fr;gap:10px;">
+      <div class="glass-sm" style="padding:16px;display:flex;align-items:center;gap:14px;">
+        <div style="width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,rgba(94,234,160,0.2),rgba(94,234,160,0.05));display:flex;align-items:center;justify-content:center;font-size:24px;">🏆</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;">Japan Trip Fund</div>
+          <div style="font-size:10px;color:var(--text-dim);">$5,000 saved in 62 days</div>
+          <div style="font-size:9px;color:var(--victory);margin-top:2px;font-weight:600;">Quest Trophy — Hall of Heroes</div>
+        </div>
+      </div>
+      <div class="glass-sm" style="padding:16px;display:flex;align-items:center;gap:14px;">
+        <div style="width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,rgba(91,156,255,0.2),rgba(91,156,255,0.05));display:flex;align-items:center;justify-content:center;font-size:24px;">🗿</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;">100 Transactions</div>
+          <div style="font-size:10px;color:var(--text-dim);">Stone monument in courtyard</div>
+          <div style="font-size:9px;color:var(--hero);margin-top:2px;font-weight:600;">Milestone Marker</div>
+        </div>
+      </div>
+      <div class="glass-sm" style="padding:16px;display:flex;align-items:center;gap:14px;opacity:0.35;">
+        <div style="width:50px;height:50px;border-radius:14px;background:var(--surface-hi);display:flex;align-items:center;justify-content:center;font-size:24px;">🔒</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:var(--text-faint);">1 Year Veteran</div>
+          <div style="font-size:10px;color:var(--text-faint);">365 days of tracking</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 4: SEASONAL EVENT ===== -->
+<div id="s-event" class="v2-screen">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#1A1030,#0A0820,var(--void));pointer-events:none;"></div>
+  <!-- Event particles -->
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;">
+    <div class="particle" style="top:15%;left:20%;background:var(--amber);animation-delay:0s;width:4px;height:4px;"></div>
+    <div class="particle" style="top:25%;left:70%;background:#FF6B52;animation-delay:0.6s;width:3px;height:3px;"></div>
+    <div class="particle" style="top:10%;left:45%;background:var(--hero);animation-delay:1.2s;"></div>
+    <div class="particle" style="top:20%;left:85%;background:var(--victory);animation-delay:1.8s;width:3px;height:3px;"></div>
+  </div>
+  <div style="padding:60px 20px 120px;position:relative;">
+    <!-- Event Badge -->
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="display:inline-block;padding:6px 16px;border-radius:20px;background:linear-gradient(135deg,rgba(245,166,35,0.2),rgba(255,107,82,0.2));border:1px solid rgba(245,166,35,0.3);margin-bottom:16px;">
+        <span style="font-size:11px;font-weight:700;color:var(--amber);" class="tactical">LIMITED EVENT — 5 DAYS LEFT</span>
+      </div>
+      <h2 style="font-weight:800;font-size:26px;margin-bottom:6px;">
+        <span style="background:linear-gradient(135deg,var(--amber),#FF6B52);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Summer Savings Sprint</span>
+      </h2>
+      <p style="font-size:13px;color:var(--text-dim);max-width:300px;margin:0 auto;">Complete daily challenges for 7 days to earn exclusive summer decorations for your base.</p>
+    </div>
+
+    <!-- Progress -->
+    <div class="glass" style="padding:20px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:11px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Event Progress</span>
+        <span class="mono" style="font-size:13px;font-weight:700;color:var(--amber);">5 / 7</span>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <div style="flex:1;height:8px;border-radius:4px;background:var(--amber);box-shadow:0 0 8px var(--amber-glow);"></div>
+        <div style="flex:1;height:8px;border-radius:4px;background:var(--amber);box-shadow:0 0 8px var(--amber-glow);"></div>
+        <div style="flex:1;height:8px;border-radius:4px;background:var(--amber);box-shadow:0 0 8px var(--amber-glow);"></div>
+        <div style="flex:1;height:8px;border-radius:4px;background:var(--amber);box-shadow:0 0 8px var(--amber-glow);"></div>
+        <div style="flex:1;height:8px;border-radius:4px;background:var(--amber);box-shadow:0 0 8px var(--amber-glow);"></div>
+        <div style="flex:1;height:8px;border-radius:4px;background:var(--surface-hi);"></div>
+        <div style="flex:1;height:8px;border-radius:4px;background:var(--surface-hi);"></div>
+      </div>
+    </div>
+
+    <!-- Today's Challenge -->
+    <div class="glass" style="padding:20px;margin-bottom:16px;border:1px solid rgba(245,166,35,0.2);">
+      <div style="display:flex;align-items:center;gap:4px;margin-bottom:10px;">
+        <span style="font-size:14px;">⚡</span>
+        <span style="font-size:11px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Today's Challenge</span>
+      </div>
+      <h3 style="font-weight:800;font-size:16px;margin-bottom:6px;">No Shopping Day</h3>
+      <p style="font-size:12px;color:var(--text-dim);line-height:1.5;margin-bottom:14px;">Log all expenses today with zero shopping category transactions. Prove your impulse control!</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-faint);">Reward:</span>
+          <span style="font-size:12px;font-weight:700;color:var(--amber);">+100 XP</span>
+          <span style="font-size:12px;">+</span>
+          <span style="font-size:12px;font-weight:700;color:var(--hero);">🏖 Beach Flag</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rewards -->
+    <h3 style="font-weight:700;font-size:14px;margin-bottom:12px;">Event Rewards</h3>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+      <div class="glass-sm" style="padding:14px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:6px;">🏖</div>
+        <div style="font-size:11px;font-weight:700;">Beach Flag</div>
+        <div style="font-size:9px;color:var(--victory);margin-top:2px;">Day 1 ✓</div>
+      </div>
+      <div class="glass-sm" style="padding:14px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:6px;">🌴</div>
+        <div style="font-size:11px;font-weight:700;">Palm Tree</div>
+        <div style="font-size:9px;color:var(--victory);margin-top:2px;">Day 3 ✓</div>
+      </div>
+      <div class="glass-sm" style="padding:14px;text-align:center;">
+        <div style="font-size:32px;margin-bottom:6px;">☀️</div>
+        <div style="font-size:11px;font-weight:700;">Sun Banner</div>
+        <div style="font-size:9px;color:var(--amber);margin-top:2px;">Day 5 — TODAY</div>
+      </div>
+      <div class="glass-sm" style="padding:14px;text-align:center;opacity:0.35;">
+        <div style="font-size:32px;margin-bottom:6px;">🔒</div>
+        <div style="font-size:11px;font-weight:700;color:var(--text-faint);">Summer Fortress</div>
+        <div style="font-size:9px;color:var(--text-faint);margin-top:2px;">Day 7 — Complete all</div>
+      </div>
+    </div>
+
+    <!-- Final reward callout -->
+    <div style="margin-top:16px;padding:16px;border-radius:16px;background:linear-gradient(135deg,rgba(245,166,35,0.08),rgba(255,107,82,0.08));border:1px solid rgba(245,166,35,0.15);text-align:center;">
+      <p style="font-size:12px;color:var(--text-dim);">Complete all 7 days to unlock the exclusive</p>
+      <p style="font-weight:800;font-size:16px;color:var(--amber);margin-top:4px;">☀️ Summer Fortress Skin</p>
+      <p style="font-size:11px;color:var(--text-faint);margin-top:4px;">Limited edition — never available again</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 5: COMPANION DETAIL ===== -->
+<div id="s-companion" class="v2-screen">
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,#0B1628,var(--void));pointer-events:none;"></div>
+  <div style="padding:60px 20px 120px;position:relative;">
+    <!-- Companion hero -->
+    <div style="text-align:center;margin-bottom:28px;">
+      <svg width="120" height="120" viewBox="0 0 64 64" style="filter:drop-shadow(0 8px 24px rgba(0,0,0,0.5));margin-bottom:16px;">
+        <ellipse cx="32" cy="44" rx="16" ry="14" fill="#E8C17A"/>
+        <path d="M20 40 Q32 32 44 40 L42 50 Q32 54 22 50 Z" fill="#3A6AAA" opacity="0.8"/>
+        <path d="M24 42 Q32 36 40 42 L38 48 Q32 51 26 48 Z" fill="#5B9CFF" opacity="0.4"/>
+        <circle cx="32" cy="28" r="12" fill="#F0D08A"/>
+        <path d="M20 22 L24 10 L28 22Z" fill="#E8C17A"/>
+        <path d="M36 22 L40 10 L44 22Z" fill="#E8C17A"/>
+        <path d="M22 20 L25 13 L27 21Z" fill="#F5DDA5"/>
+        <path d="M37 21 L39 13 L42 20Z" fill="#F5DDA5"/>
+        <g style="transform-origin:28px 27px;animation:blink 4s ease-in-out infinite;">
+          <circle cx="27" cy="27" r="3.5" fill="#1A2340"/>
+          <circle cx="28" cy="26" r="1.2" fill="white"/>
+        </g>
+        <g style="transform-origin:37px 27px;animation:blink 4s ease-in-out infinite;animation-delay:0.1s;">
+          <circle cx="37" cy="27" r="3.5" fill="#1A2340"/>
+          <circle cx="38" cy="26" r="1.2" fill="white"/>
+        </g>
+        <ellipse cx="32" cy="31" rx="2" ry="1.5" fill="#3A2A10"/>
+        <path d="M30 33 Q32 35 34 33" fill="none" stroke="#3A2A10" stroke-width="0.8"/>
+        <path d="M22 24 Q32 16 42 24" fill="#3A6AAA" opacity="0.6"/>
+        <circle cx="32" cy="18" r="2" fill="var(--amber)" opacity="0.8"/>
+        <g style="transform-origin:48px 44px;animation:bob 3s ease-in-out infinite alternate;">
+          <path d="M46 38 L52 40 L52 46 C52 49 49 51 48 52 C47 51 44 49 44 46 L44 40 Z" fill="var(--victory)" opacity="0.7"/>
+        </g>
+      </svg>
+      <h2 style="font-weight:800;font-size:24px;margin-bottom:4px;">Scout</h2>
+      <p style="font-size:12px;color:var(--text-dim);">Your Battle Companion — Rank: Captain</p>
+    </div>
+
+    <!-- Companion Stats -->
+    <div class="glass" style="padding:18px;margin-bottom:16px;">
+      <div style="font-size:10px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Companion Bond</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:12px;color:var(--text-dim);">Bond Level</span>
+        <span class="mono" style="font-weight:700;color:var(--hero);">Rank 4 / 10</span>
+      </div>
+      <div style="height:6px;background:var(--surface-hi);border-radius:3px;overflow:hidden;">
+        <div style="height:100%;width:40%;background:linear-gradient(90deg,var(--hero),#5B9CFF);border-radius:3px;"></div>
+      </div>
+      <p style="font-size:10px;color:var(--text-faint);margin-top:6px;">Bond grows as you follow Scout's advice and maintain streaks.</p>
+    </div>
+
+    <!-- Armor -->
+    <div class="glass" style="padding:18px;margin-bottom:16px;">
+      <div style="font-size:10px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Equipped Armor</div>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;padding:12px;border-radius:12px;background:var(--surface-hi);text-align:center;border:1px solid var(--hero);border-opacity:0.3;">
+          <div style="font-size:24px;margin-bottom:4px;">⚔️</div>
+          <div style="font-size:10px;font-weight:700;color:var(--hero);">Chain Mail</div>
+          <div style="font-size:9px;color:var(--text-faint);">Level 5+</div>
+        </div>
+        <div style="flex:1;padding:12px;border-radius:12px;background:var(--surface-hi);text-align:center;opacity:0.4;">
+          <div style="font-size:24px;margin-bottom:4px;">🔒</div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-faint);">Plate Armor</div>
+          <div style="font-size:9px;color:var(--text-faint);">Level 15</div>
+        </div>
+        <div style="flex:1;padding:12px;border-radius:12px;background:var(--surface-hi);text-align:center;opacity:0.25;">
+          <div style="font-size:24px;margin-bottom:4px;">🔒</div>
+          <div style="font-size:10px;font-weight:700;color:var(--text-faint);">Golden Set</div>
+          <div style="font-size:9px;color:var(--text-faint);">Level 25</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Messages -->
+    <div class="glass" style="padding:18px;">
+      <div style="font-size:10px;color:var(--text-faint);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Recent Intel</div>
+      <div style="space-y:12px;">
+        <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--victory);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <p style="font-size:12px;line-height:1.5;">Food spending dropped <span style="color:var(--victory);font-weight:700;">15%</span> this week. The fortress grows stronger!</p>
+            <p style="font-size:10px;color:var(--text-faint);margin-top:2px;">2 hours ago</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--amber);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <p style="font-size:12px;line-height:1.5;">Entertainment at <span style="color:var(--amber);font-weight:700;">82%</span> of budget. Watch the flank, Commander.</p>
+            <p style="font-size:10px;color:var(--text-faint);margin-top:2px;">Yesterday</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:flex-start;">
+          <div style="width:6px;height:6px;border-radius:50%;background:var(--hero);margin-top:6px;flex-shrink:0;"></div>
+          <div>
+            <p style="font-size:12px;line-height:1.5;">Budget streak hit <span style="color:var(--hero);font-weight:700;">7 days</span>! New Guard deployed to the gates.</p>
+            <p style="font-size:10px;color:var(--text-faint);margin-top:2px;">3 days ago</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BOTTOM NAV ===== -->
+<nav class="v2-nav">
+  <button onclick="switchV2('warbase')" data-v2="warbase" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path d="M9 22V12h6v10"/></svg>
+    Base
+  </button>
+  <button onclick="switchV2('evolution')" data-v2="evolution">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+    Evolve
+  </button>
+  <button onclick="switchV2('collection')" data-v2="collection">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Collect
+  </button>
+  <button onclick="switchV2('event')" data-v2="event">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    Event
+  </button>
+  <button onclick="switchV2('companion')" data-v2="companion">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C12 21 4 15 4 8.5C4 5.42 6.42 3 9.5 3c1.74 0 3.41.81 4.5 2.09A5.99 5.99 0 0118.5 3C21.58 3 24 5.42 24 8.5 24 15 12 21 12 21z" transform="scale(0.85) translate(2,2)"/></svg>
+    Scout
+  </button>
+</nav>
+
+<script>
+// Screen switching
+function switchV2(id) {
+  document.querySelectorAll('.v2-screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('s-' + id);
+  if (el) { el.classList.add('active'); el.style.animation='none'; el.offsetHeight; el.style.animation=''; }
+  document.querySelectorAll('.v2-nav button').forEach(b => {
+    const isActive = b.dataset.v2 === id;
+    b.classList.toggle('active', isActive);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Collection tabs
+function collTab(tab) {
+  ['troops','decor','trophy'].forEach(t => {
+    const el = document.getElementById('coll-'+t);
+    const btn = document.getElementById('ct-'+t);
+    if (t === tab) {
+      el.style.display = t === 'troops' ? 'grid' : (t === 'decor' ? 'grid' : 'grid');
+      el.style.gridTemplateColumns = t === 'troops' ? 'repeat(3,1fr)' : (t === 'decor' ? 'repeat(2,1fr)' : '1fr');
+      btn.style.background = 'linear-gradient(135deg,#5B9CFF,#1B6EF2)';
+      btn.style.color = 'white';
+      btn.style.border = 'none';
+      btn.style.boxShadow = '0 4px 16px ' + 'rgba(91,156,255,0.35)';
+    } else {
+      el.style.display = 'none';
+      btn.style.background = 'var(--surface-hi)';
+      btn.style.color = 'var(--text-dim)';
+      btn.style.border = '1px solid var(--glass-border)';
+      btn.style.boxShadow = 'none';
+    }
+  });
+}
+
+// Companion messages
+const messages = [
+  {label:'Scout Reports', text:'Food spending dropped <span style="color:var(--victory);font-weight:700;">15%</span> this week. The fortress grows stronger, Commander!'},
+  {label:'Alert', text:'Entertainment budget at <span style="color:var(--amber);font-weight:700;">82%</span>. Recommend holding the line for 3 more days.'},
+  {label:'Victory', text:'Budget streak hit <span style="color:var(--hero);font-weight:700;">7 days</span>! I\'ve deployed a new Guard to the gates. 🛡'},
+  {label:'Intel', text:'You saved <span style="color:var(--victory);font-weight:700;">$320</span> more than last week. Duel projection: <span style="color:var(--victory);font-weight:700;">WIN 3-1</span>!'},
+];
+let msgIdx = 0;
+function cycleCompanionMessage() {
+  const bubble = document.getElementById('companionSpeech');
+  bubble.classList.remove('show');
+  setTimeout(() => {
+    msgIdx = (msgIdx + 1) % messages.length;
+    bubble.innerHTML = `<div style="font-size:9px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">${messages[msgIdx].label}</div>${messages[msgIdx].text}`;
+    bubble.classList.add('show');
+  }, 300);
+}
+</script>
+</body>
+</html>

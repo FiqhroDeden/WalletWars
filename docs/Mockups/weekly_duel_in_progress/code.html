@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#1e253b",
+              "outline": "#707588",
+              "on-primary": "#002b6b",
+              "primary-container": "#749eff",
+              "primary-dim": "#1a6df1",
+              "tertiary-fixed-dim": "#61ee9a",
+              "primary-fixed": "#749eff",
+              "secondary-fixed": "#ffc4b9",
+              "secondary-fixed-dim": "#ffb0a1",
+              "error-container": "#9f0519",
+              "on-surface": "#e1e4fa",
+              "surface-container-lowest": "#000000",
+              "on-primary-fixed-variant": "#002966",
+              "secondary-dim": "#ff7259",
+              "surface-bright": "#242b43",
+              "surface-variant": "#1e253b",
+              "on-secondary-fixed-variant": "#a21200",
+              "background": "#090e1c",
+              "on-error-container": "#ffa8a3",
+              "on-error": "#490006",
+              "on-background": "#e1e4fa",
+              "inverse-primary": "#0058cd",
+              "surface-dim": "#090e1c",
+              "primary-fixed-dim": "#5b8fff",
+              "on-tertiary-fixed": "#004a27",
+              "on-tertiary-fixed-variant": "#006a3a",
+              "error": "#ff716c",
+              "on-primary-container": "#002054",
+              "on-tertiary-container": "#005f33",
+              "tertiary-fixed": "#70fda7",
+              "surface-tint": "#8aacff",
+              "primary": "#8aacff",
+              "secondary-container": "#a61200",
+              "on-primary-fixed": "#000000",
+              "inverse-on-surface": "#505466",
+              "outline-variant": "#434759",
+              "on-secondary": "#480400",
+              "on-surface-variant": "#a6aabf",
+              "surface": "#090e1c",
+              "surface-container-low": "#0d1323",
+              "tertiary": "#c2ffd1",
+              "tertiary-dim": "#61ee9a",
+              "tertiary-container": "#70fda7",
+              "surface-container-high": "#181f33",
+              "inverse-surface": "#faf8ff",
+              "on-secondary-container": "#ffdbd5",
+              "on-tertiary": "#006839",
+              "on-secondary-fixed": "#6d0800",
+              "error-dim": "#d7383b",
+              "surface-container": "#13192b",
+              "secondary": "#ff7259"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(30, 37, 59, 0.6);
+            backdrop-filter: blur(24px) saturate(120%);
+            -webkit-backdrop-filter: blur(24px) saturate(120%);
+        }
+        .liquid-gradient {
+            background: linear-gradient(135deg, #1B6EF2 0%, #749eff 100%);
+        }
+        .liquid-gradient-red {
+            background: linear-gradient(135deg, #a61200 0%, #ff7259 100%);
+        }
+        .mono-stats {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-900/60 backdrop-blur-xl shadow-2xl shadow-blue-900/20">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-container/20 flex items-center justify-center">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="minimalist avatar of a person with stylish glasses and short hair on a clean blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC06ND0D8oPJv_kZARbRi0qDq-4YRo-7N3NwsV0lhim9kM9xFOKGX4lVEOxG8j2fMCwaCp-u3a3NL90QrfRst383UwFxVwGBBSnpISVJMnEYY55_kLx0LPxwNn1Ffm2gV1B5Nu04wzEvkhBmpXFIcFA_BUhUhD3lx9a8ZqDll6wk33FE8zBUBTjEB3Z5adcrHjGCbfUq8Ia9dEm5veUn-cBgfqFS-MoAS8KWHh0z80L2aFWKaVFK25bVsU0x1fKHrlL29RMZWkOHUga"/>
+</div>
+<span class="font-headline font-black text-blue-500 italic text-xl tracking-tight">WalletWars</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-blue-400 hover:opacity-80 transition-opacity cursor-pointer">notifications</span>
+</div>
+</header>
+<main class="pt-24 px-4 max-w-2xl mx-auto space-y-6">
+<!-- VS Scoreboard Header -->
+<section class="relative overflow-hidden rounded-lg glass-panel p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary opacity-50"></div>
+<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col items-center gap-2">
+<div class="w-16 h-16 rounded-full liquid-gradient p-0.5 shadow-[0_0_20px_rgba(27,110,242,0.4)]">
+<img alt="User" class="w-full h-full rounded-full bg-surface-container" data-alt="circular avatar portrait of a modern digital character representing the user in a gaming interface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-PxQ533JI0KqoOtRFCh5GKzU27CLDBiaI_H3emWYnG-tL8XlFz0advOR6pvMJU3_OleT6B6Z-Ilxr_cssM0KLHrhZVXf47f_iB4BeekLTml-MZrldjSqR5wtYdUDAKfO-iUbgpjYEmskkU1A33NkYJFqS8kafj9o596Nkipeyb4qLP2UczXrkd6YmmprBR3MQAfAlGB6OfdqNycJeB9ZWuRkDvrl6R42jM0-fUSJTvgkvuHE2NHw7s1HFQ7rjPt68Tv5mMbhLm2G5"/>
+</div>
+<span class="font-headline font-bold text-sm tracking-wide">YOU</span>
+<span class="font-headline font-extrabold text-3xl mono-stats text-primary">2</span>
+</div>
+<div class="text-center">
+<span class="inline-block px-3 py-1 rounded-full bg-surface-container-highest text-[10px] font-bold tracking-[0.2em] text-outline mb-2">DAY 4 OF 7</span>
+<div class="font-headline font-black text-4xl italic text-outline-variant opacity-30 select-none">VS</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-16 h-16 rounded-full liquid-gradient-red p-0.5 shadow-[0_0_20px_rgba(166,18,0,0.4)]">
+<img alt="Opponent" class="w-full h-full rounded-full bg-surface-container" data-alt="menacing digital avatar of a rival player with dark clothing and intense gaze for a competitive app" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApxPpKos4FELKgcV8U7oMD6c5Ka0r5_OGy_KsG9P3jHKjbwlG_ty7fvrcS_R_fEGhLGFPfCi0N1FDOo2ONhKq7-GuRfesbe_11mPaOVVgwwZuwfJA4TkKjkCvJevznT1wPLCQJQT0v9w6g4JAb07_FbJa3CNgqMPDEBpZm4IOnXBSt1BUQGn_qHj7TvPxv7UvKN_JBuqJph9fG1ucTxGrOFu18sdXZalSaCXeSlsGLGALLmoC1i0efXTJqhrWtEgDQlJ5_750bc1Hn"/>
+</div>
+<span class="font-headline font-bold text-sm tracking-wide text-secondary">RIVAL</span>
+<span class="font-headline font-extrabold text-3xl mono-stats text-secondary">1</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-lowest h-2 rounded-full overflow-hidden flex">
+<div class="h-full liquid-gradient" style="width: 60%;"></div>
+<div class="h-full liquid-gradient-red" style="width: 40%;"></div>
+</div>
+</section>
+<!-- Battle Rounds Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Round 1: War Chest -->
+<div class="glass-panel p-5 rounded-lg flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold tracking-widest text-outline uppercase">ROUND 01</span>
+<h3 class="font-headline font-bold text-lg">War Chest</h3>
+</div>
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div class="mt-4 space-y-2">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline">CURRENT DEPOSIT</span>
+<span class="font-headline font-extrabold text-xl mono-stats text-primary">$1,240</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-outline">RIVAL</span>
+<span class="font-headline font-bold text-sm mono-stats text-secondary">$890</span>
+</div>
+</div>
+<div class="px-2 py-1 bg-tertiary-container/10 border border-tertiary-container/20 rounded-md">
+<span class="text-[10px] font-bold text-tertiary uppercase tracking-tighter">YOU'RE AHEAD</span>
+</div>
+</div>
+</div>
+<!-- Round 2: Saving Power -->
+<div class="glass-panel p-5 rounded-lg flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold tracking-widest text-outline uppercase">ROUND 02</span>
+<h3 class="font-headline font-bold text-lg">Saving Power</h3>
+</div>
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div class="mt-4 space-y-2">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline">DAILY STREAK</span>
+<span class="font-headline font-extrabold text-xl mono-stats text-primary-fixed">4/4</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-outline">RIVAL</span>
+<span class="font-headline font-bold text-sm mono-stats text-secondary-dim">3/7</span>
+</div>
+</div>
+<div class="px-2 py-1 bg-tertiary-container/10 border border-tertiary-container/20 rounded-md">
+<span class="text-[10px] font-bold text-tertiary uppercase tracking-tighter">YOU'RE AHEAD</span>
+</div>
+</div>
+</div>
+<!-- Round 3: Impulse Shield -->
+<div class="glass-panel p-5 rounded-lg flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold tracking-widest text-outline uppercase">ROUND 03</span>
+<h3 class="font-headline font-bold text-lg">Impulse Shield</h3>
+</div>
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="mt-4 space-y-2">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline">NON-ESSENTIALS</span>
+<span class="font-headline font-extrabold text-xl mono-stats text-secondary">$280</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-outline">RIVAL</span>
+<span class="font-headline font-bold text-sm mono-stats text-primary">$180</span>
+</div>
+</div>
+<div class="px-2 py-1 bg-secondary-container/10 border border-secondary-container/20 rounded-md">
+<span class="text-[10px] font-bold text-secondary uppercase tracking-tighter">BEHIND</span>
+</div>
+</div>
+</div>
+<!-- Round 4: Tactical Growth -->
+<div class="glass-panel p-5 rounded-lg flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold tracking-widest text-outline uppercase">ROUND 04</span>
+<h3 class="font-headline font-bold text-lg">Tactical Growth</h3>
+</div>
+<span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+</div>
+<div class="mt-4 space-y-2">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline">INVESTMENT XP</span>
+<span class="font-headline font-extrabold text-xl mono-stats text-on-surface">920</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-outline">RIVAL</span>
+<span class="font-headline font-bold text-sm mono-stats text-on-surface">905</span>
+</div>
+</div>
+<div class="px-2 py-1 bg-surface-container-highest border border-outline-variant rounded-md">
+<span class="text-[10px] font-bold text-outline uppercase tracking-tighter">NECK AND NECK</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Projection Card -->
+<section class="liquid-gradient p-6 rounded-lg shadow-2xl shadow-blue-900/40 relative overflow-hidden">
+<div class="absolute -right-10 -bottom-10 opacity-20 transform rotate-12">
+<span class="material-symbols-outlined text-[160px]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-white text-sm">auto_awesome</span>
+<span class="text-[10px] font-bold text-white/80 tracking-widest uppercase">TACTICAL ANALYSIS</span>
+</div>
+<h2 class="font-headline font-black text-3xl text-white mb-2">Projection: WIN 3-1</h2>
+<p class="text-white/90 text-sm leading-relaxed max-w-[80%] font-medium">
+                    You're dominating the savings rounds. Maintain your <strong>Impulse Shield</strong> today to seal the victory and claim the 500 XP bonus!
+                </p>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-slate-900/60 backdrop-blur-2xl rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.4)] bg-gradient-to-t from-blue-500/5 to-transparent">
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-blue-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">bar_chart</span>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-blue-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">list_alt</span>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest">Log</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-400 drop-shadow-[0_0_8px_rgba(27,110,242,0.6)] scale-110" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">sports_kabaddi</span>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest">Duel</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-blue-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">flag</span>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest">Quest</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-blue-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1">emoji_events</span>
+<span class="font-['Plus_Jakarta_Sans'] font-bold text-[10px] uppercase tracking-widest">Profile</span>
+</a>
+</nav>
+</body></html>

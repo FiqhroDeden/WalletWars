@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#1e253b",
+              "outline": "#707588",
+              "on-primary": "#002b6b",
+              "primary-container": "#749eff",
+              "primary-dim": "#1a6df1",
+              "tertiary-fixed-dim": "#61ee9a",
+              "primary-fixed": "#749eff",
+              "secondary-fixed": "#ffc4b9",
+              "secondary-fixed-dim": "#ffb0a1",
+              "error-container": "#9f0519",
+              "on-surface": "#e1e4fa",
+              "surface-container-lowest": "#000000",
+              "on-primary-fixed-variant": "#002966",
+              "secondary-dim": "#ff7259",
+              "surface-bright": "#242b43",
+              "surface-variant": "#1e253b",
+              "on-secondary-fixed-variant": "#a21200",
+              "background": "#090e1c",
+              "on-error-container": "#ffa8a3",
+              "on-error": "#490006",
+              "on-background": "#e1e4fa",
+              "inverse-primary": "#0058cd",
+              "surface-dim": "#090e1c",
+              "primary-fixed-dim": "#5b8fff",
+              "on-tertiary-fixed": "#004a27",
+              "on-tertiary-fixed-variant": "#006a3a",
+              "error": "#ff716c",
+              "on-primary-container": "#002054",
+              "on-tertiary-container": "#005f33",
+              "tertiary-fixed": "#70fda7",
+              "surface-tint": "#8aacff",
+              "primary": "#8aacff",
+              "secondary-container": "#a61200",
+              "on-primary-fixed": "#000000",
+              "inverse-on-surface": "#505466",
+              "outline-variant": "#434759",
+              "on-secondary": "#480400",
+              "on-surface-variant": "#a6aabf",
+              "surface": "#090e1c",
+              "surface-container-low": "#0d1323",
+              "tertiary": "#c2ffd1",
+              "tertiary-dim": "#61ee9a",
+              "tertiary-container": "#70fda7",
+              "surface-container-high": "#181f33",
+              "inverse-surface": "#faf8ff",
+              "on-secondary-container": "#ffdbd5",
+              "on-tertiary": "#006839",
+              "on-secondary-fixed": "#6d0800",
+              "error-dim": "#d7383b",
+              "surface-container": "#13192b",
+              "secondary": "#ff7259"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .glass-card {
+        background: rgba(30, 37, 59, 0.6);
+        backdrop-filter: blur(24px) saturate(120%);
+      }
+      .liquid-gradient-blue {
+        background: linear-gradient(135deg, #8AACFF 0%, #1B6EF2 100%);
+      }
+      .liquid-gradient-red {
+        background: linear-gradient(135deg, #ffb0a1 0%, #ff7259 100%);
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen overflow-x-hidden">
+<div class="max-w-[1440px] mx-auto px-6 py-12 md:py-24 grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+<!-- Page 1: Your wallet has a rival -->
+<section class="relative flex flex-col items-center justify-between min-h-[700px] p-8 glass-card rounded-lg overflow-hidden shadow-2xl shadow-primary/10">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<div class="absolute top-0 -left-1/4 w-full h-full bg-primary/20 blur-[120px] rounded-full"></div>
+</div>
+<div class="relative z-10 text-center">
+<h1 class="font-headline font-extrabold text-4xl tracking-tight leading-tight mb-4">Your wallet has a <span class="text-secondary italic">rival</span></h1>
+<p class="text-on-surface-variant text-lg">Every transaction is a move in the ultimate battle for financial dominance.</p>
+</div>
+<!-- VS Illustration -->
+<div class="relative w-full flex items-center justify-center py-12">
+<div class="flex items-center gap-4 w-full justify-between relative">
+<!-- You Now -->
+<div class="flex flex-col items-center space-y-4">
+<div class="w-32 h-32 rounded-full liquid-gradient-blue p-1 shadow-[0_0_30px_rgba(27,110,242,0.4)]">
+<div class="w-full h-full rounded-full bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="User Avatar" class="w-24 h-24" data-alt="Stylized modern 3D avatar of a confident young person with blue tech accessories in a vibrant minimalist style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7dn72GTmIopSgrt7ZRVNlCLf6UZHT9snsGajnITo4TTmzSKD4Uxk6dMWnmJPCJBT3DZb3ix25VqaQ4eL-ylWOHi9Qyl1uPSGydWAT_R0X7V71XSJb5Gx7ncxGcypui4gxUXS_SDxaZnsZLYy6jnMTgvjtuYEtOyy_ge59X8h0tG6ytosj7d_IoKCADbjytWKnATJ3daWI4vy3UGnpfjQsSpa8RrW1RXed9g83vQM1yAwB4lofARgKX_BbpL4uaGT6gXJFCD_lySwF"/>
+</div>
+</div>
+<span class="font-headline text-primary font-bold tracking-widest uppercase text-xs">YOU NOW</span>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 z-20">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest border-4 border-outline-variant/20 flex items-center justify-center shadow-2xl">
+<span class="font-headline font-black text-2xl italic tracking-tighter">VS</span>
+</div>
+</div>
+<!-- Past You -->
+<div class="flex flex-col items-center space-y-4">
+<div class="w-32 h-32 rounded-full liquid-gradient-red p-1 shadow-[0_0_30px_rgba(255,114,89,0.4)]">
+<div class="w-full h-full rounded-full bg-surface-container flex items-center justify-center overflow-hidden grayscale opacity-80">
+<img alt="Past Avatar" class="w-24 h-24" data-alt="Monochrome grayscale version of the user avatar looking slightly tired or messy representing past financial habits" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByHlkvbq2LaKNkafNfYY_XWKpF51Wu4gkFuApOwTVHFYksuiN6Hbjq-C3qjLAe4QKBoOotAcRH_e3ilLuNPT0rRNG4s2Sn0A7ndg5s_RBh8xltcoEGEKY1AF2HollW4UzVSzppLDbveEWTWnxv57twfQ5wxpKKUvPmU7TY3Cz5EI6mbFsVd90unxw-K0-jr_ZFc6AT6jcSEclb4eKUCr9bua4Df-hgNIZcsN9MfAUgiHyMnIRy6FUsoRaZv7gdXJtJpKgIIkAJp3C9"/>
+</div>
+</div>
+<span class="font-headline text-secondary font-bold tracking-widest uppercase text-xs">PAST YOU</span>
+</div>
+</div>
+</div>
+<div class="w-full space-y-4 relative z-10">
+<button class="w-full py-5 rounded-full liquid-gradient-blue text-on-primary font-headline font-bold text-lg shadow-lg hover:scale-[1.02] transition-transform active:scale-95">
+                    Analyze My Rival
+                </button>
+<div class="flex justify-center gap-2">
+<div class="w-8 h-1.5 rounded-full bg-primary"></div>
+<div class="w-2 h-1.5 rounded-full bg-outline-variant"></div>
+<div class="w-2 h-1.5 rounded-full bg-outline-variant"></div>
+</div>
+</div>
+</section>
+<!-- Page 2: How WalletWars Works -->
+<section class="relative flex flex-col items-center justify-between min-h-[700px] p-8 glass-card rounded-lg overflow-hidden shadow-2xl">
+<div class="relative z-10 text-center w-full">
+<h2 class="font-headline font-extrabold text-3xl tracking-tight mb-8">How it Works</h2>
+<div class="grid grid-cols-1 gap-4 w-full">
+<!-- Step 1 -->
+<div class="flex items-center p-5 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-highest transition-colors">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mr-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_note</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline font-bold text-sm text-primary tracking-wide uppercase">LOG</h3>
+<p class="text-on-surface text-base">Track every gold piece spent.</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex items-center p-5 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-highest transition-colors">
+<div class="w-12 h-12 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary mr-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline font-bold text-sm text-tertiary tracking-wide uppercase">DEFEND</h3>
+<p class="text-on-surface text-base">Protect your stash from impulses.</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex items-center p-5 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-highest transition-colors">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary mr-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swords</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline font-bold text-sm text-secondary tracking-wide uppercase">DUEL</h3>
+<p class="text-on-surface text-base">Battle your monthly budget goals.</p>
+</div>
+</div>
+<!-- Step 4 -->
+<div class="flex items-center p-5 rounded-lg bg-surface-container-high/50 hover:bg-surface-container-highest transition-colors">
+<div class="w-12 h-12 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary-container mr-4">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<div class="text-left">
+<h3 class="font-headline font-bold text-sm text-primary-container tracking-wide uppercase">LEVEL UP</h3>
+<p class="text-on-surface text-base">Unlock epic financial freedom.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full space-y-4 mt-8">
+<button class="w-full py-5 rounded-full bg-surface-container-highest text-on-surface font-headline font-bold text-lg border-2 border-outline-variant/20 hover:bg-surface-bright transition-all">
+                    Next Maneuver
+                </button>
+<div class="flex justify-center gap-2">
+<div class="w-2 h-1.5 rounded-full bg-outline-variant"></div>
+<div class="w-8 h-1.5 rounded-full bg-primary"></div>
+<div class="w-2 h-1.5 rounded-full bg-outline-variant"></div>
+</div>
+</div>
+</section>
+<!-- Page 3: Set Your Monthly Budget -->
+<section class="relative flex flex-col items-center justify-between min-h-[700px] p-8 glass-card rounded-lg overflow-hidden shadow-2xl">
+<div class="relative z-10 text-center w-full">
+<h2 class="font-headline font-extrabold text-3xl tracking-tight mb-2">Set Your Shield</h2>
+<p class="text-on-surface-variant mb-12">How much will you defend this month?</p>
+<div class="relative flex flex-col items-center">
+<!-- Currency Selector -->
+<div class="flex gap-2 mb-8">
+<button class="px-4 py-2 rounded-full bg-primary text-on-primary font-bold text-sm">USD</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-bold text-sm">EUR</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant font-bold text-sm">GBP</button>
+</div>
+<!-- Large Input -->
+<div class="w-full relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary to-tertiary rounded-lg blur opacity-20 group-focus-within:opacity-50 transition-opacity"></div>
+<div class="relative bg-surface-container-low rounded-lg p-8 flex flex-col items-center border border-outline-variant/10">
+<span class="text-primary font-headline text-2xl font-bold mb-2">$</span>
+<input class="bg-transparent border-none text-center font-headline font-black text-6xl focus:ring-0 text-on-surface w-full p-0" placeholder="0.00" type="text" value="3,500"/>
+<div class="mt-4 flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="text-xs font-bold tracking-widest uppercase">Safe Zone Target</span>
+</div>
+</div>
+</div>
+<p class="mt-8 text-on-surface-variant text-sm px-4">This sets your HP for the month. Spending over this limit deals damage to your character.</p>
+</div>
+</div>
+<div class="w-full space-y-4 mt-8">
+<button class="w-full py-6 rounded-full liquid-gradient-blue text-on-primary font-headline font-black text-xl shadow-[0_10px_40px_rgba(27,110,242,0.3)] hover:scale-[1.03] transition-transform active:scale-95 flex items-center justify-center gap-3">
+                    Start Fighting <span class="text-2xl">⚔️</span>
+</button>
+<div class="flex justify-center gap-2">
+<div class="w-2 h-1.5 rounded-full bg-outline-variant"></div>
+<div class="w-2 h-1.5 rounded-full bg-outline-variant"></div>
+<div class="w-8 h-1.5 rounded-full bg-primary"></div>
+</div>
+</div>
+</section>
+</div>
+<!-- Decorative Elements -->
+<div class="fixed top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[150px] -z-10 rounded-full"></div>
+<div class="fixed bottom-0 left-0 w-[600px] h-[600px] bg-secondary/5 blur-[150px] -z-10 rounded-full"></div>
+</body></html>

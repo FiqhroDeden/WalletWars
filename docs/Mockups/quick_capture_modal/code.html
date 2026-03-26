@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WalletWars - Quick Capture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-highest": "#1e253b",
+                        "outline": "#707588",
+                        "on-primary": "#002b6b",
+                        "primary-container": "#749eff",
+                        "primary-dim": "#1a6df1",
+                        "tertiary-fixed-dim": "#61ee9a",
+                        "primary-fixed": "#749eff",
+                        "secondary-fixed": "#ffc4b9",
+                        "secondary-fixed-dim": "#ffb0a1",
+                        "error-container": "#9f0519",
+                        "on-surface": "#e1e4fa",
+                        "surface-container-lowest": "#000000",
+                        "on-primary-fixed-variant": "#002966",
+                        "secondary-dim": "#ff7259",
+                        "surface-bright": "#242b43",
+                        "surface-variant": "#1e253b",
+                        "on-secondary-fixed-variant": "#a21200",
+                        "background": "#090e1c",
+                        "on-error-container": "#ffa8a3",
+                        "on-error": "#490006",
+                        "on-background": "#e1e4fa",
+                        "inverse-primary": "#0058cd",
+                        "surface-dim": "#090e1c",
+                        "primary-fixed-dim": "#5b8fff",
+                        "on-tertiary-fixed": "#004a27",
+                        "on-tertiary-fixed-variant": "#006a3a",
+                        "error": "#ff716c",
+                        "on-primary-container": "#002054",
+                        "on-tertiary-container": "#005f33",
+                        "tertiary-fixed": "#70fda7",
+                        "surface-tint": "#8aacff",
+                        "primary": "#8aacff",
+                        "secondary-container": "#a61200",
+                        "on-primary-fixed": "#000000",
+                        "inverse-on-surface": "#505466",
+                        "outline-variant": "#434759",
+                        "on-secondary": "#480400",
+                        "on-surface-variant": "#a6aabf",
+                        "surface": "#090e1c",
+                        "surface-container-low": "#0d1323",
+                        "tertiary": "#c2ffd1",
+                        "tertiary-dim": "#61ee9a",
+                        "tertiary-container": "#70fda7",
+                        "surface-container-high": "#181f33",
+                        "inverse-surface": "#faf8ff",
+                        "on-secondary-container": "#ffdbd5",
+                        "on-tertiary": "#006839",
+                        "on-secondary-fixed": "#6d0800",
+                        "error-dim": "#d7383b",
+                        "surface-container": "#13192b",
+                        "secondary": "#ff7259"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(30, 37, 59, 0.6);
+            backdrop-filter: blur(32px) saturate(120%);
+        }
+        .liquid-gradient {
+            background: linear-gradient(135deg, #8aacff 0%, #1b6ef2 100%);
+        }
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- Mock Background Content (Dashboard View) -->
+<div class="fixed inset-0 z-0 p-6 opacity-40 grayscale pointer-events-none">
+<div class="flex justify-between items-center mb-10">
+<div class="h-10 w-32 bg-surface-container-high rounded-lg"></div>
+<div class="h-10 w-10 bg-surface-container-high rounded-full"></div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-8">
+<div class="h-32 bg-surface-container-low rounded-lg"></div>
+<div class="h-32 bg-surface-container-low rounded-lg"></div>
+</div>
+<div class="h-64 bg-surface-container-low rounded-lg"></div>
+</div>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"></div>
+<!-- Quick Capture Modal Sheet -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex flex-col max-h-[813px] glass-panel rounded-t-[2.5rem] shadow-[0_-20px_60px_rgba(0,0,0,0.5)] overflow-hidden">
+<!-- Pull Handle -->
+<div class="flex justify-center py-3">
+<div class="w-12 h-1.5 bg-outline-variant rounded-full opacity-40"></div>
+</div>
+<!-- Header: Close Action -->
+<div class="flex justify-end px-6">
+<button class="p-2 rounded-full bg-surface-container-highest/50 text-on-surface-variant hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto px-6 pb-4">
+<!-- Amount Input Section -->
+<div class="text-center py-6">
+<span class="block text-sm font-label font-bold text-primary-fixed uppercase tracking-[0.2em] mb-2">Battle Expense</span>
+<div class="flex items-center justify-center gap-1">
+<span class="text-3xl font-headline font-extrabold text-outline-variant">$</span>
+<span class="text-6xl font-headline font-extrabold tabular-nums tracking-tighter text-on-surface">42.50</span>
+<span class="w-1 h-12 bg-primary-dim animate-pulse ml-1"></span>
+</div>
+</div>
+<!-- Categories Grid (2x4) -->
+<div class="grid grid-cols-4 gap-3 mb-6">
+<!-- Food -->
+<button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-high hover:bg-primary-container/20 border-2 border-transparent focus:border-primary-dim transition-all group">
+<div class="w-12 h-12 rounded-2xl bg-secondary-container/20 flex items-center justify-center text-secondary-dim group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Food</span>
+</button>
+<!-- Transport -->
+<button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-high hover:bg-primary-container/20 border-2 border-transparent transition-all group">
+<div class="w-12 h-12 rounded-2xl bg-primary-container/20 flex items-center justify-center text-primary-dim group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Transport</span>
+</button>
+<!-- Shopping -->
+<button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-high hover:bg-primary-container/20 border-2 border-transparent transition-all group">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-container/20 flex items-center justify-center text-tertiary-dim group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Shopping</span>
+</button>
+<!-- Entertainment -->
+<button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-high hover:bg-primary-container/20 border-2 border-transparent transition-all group">
+<div class="w-12 h-12 rounded-2xl bg-error-container/20 flex items-center justify-center text-error group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Gaming</span>
+</button>
+<!-- Bills -->
+<button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-high hover:bg-primary-container/20 border-2 border-transparent transition-all group">
+<div class="w-12 h-12 rounded-2xl bg-secondary-fixed-dim/20 flex items-center justify-center text-secondary-fixed-dim group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Bills</span>
+</button>
+<!-- Health -->
+<button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-high hover:bg-primary-container/20 border-2 border-transparent transition-all group">
+<div class="w-12 h-12 rounded-2xl bg-error-container/10 flex items-center justify-center text-error-dim group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Health</span>
+</button>
+<!-- Education -->
+<button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-high hover:bg-primary-container/20 border-2 border-transparent transition-all group">
+<div class="w-12 h-12 rounded-2xl bg-primary-fixed-dim/20 flex items-center justify-center text-primary-fixed-dim group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Learn</span>
+</button>
+<!-- Other -->
+<button class="flex flex-col items-center gap-2 p-3 rounded-lg bg-surface-container-high hover:bg-primary-container/20 border-2 border-transparent transition-all group">
+<div class="w-12 h-12 rounded-2xl bg-outline-variant/20 flex items-center justify-center text-outline group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">more_horiz</span>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Other</span>
+</button>
+</div>
+<!-- Single Line Note -->
+<div class="relative mb-8">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-lg">edit_note</span>
+</div>
+<input class="w-full bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary-dim/30 text-sm font-body py-4 pl-12 pr-4 rounded-xl text-on-surface placeholder:text-outline/50 transition-all" placeholder="Add a tactical note..." type="text"/>
+</div>
+<!-- Save Button -->
+<button class="w-full liquid-gradient py-5 rounded-lg flex flex-col items-center justify-center shadow-[0_12px_40px_-10px_rgba(27,110,242,0.6)] active:scale-95 transition-transform">
+<span class="font-headline font-extrabold text-lg uppercase tracking-wider text-white">Save Capture</span>
+<span class="text-[10px] font-bold text-white/70 tracking-[0.2em]">+5 XP EARNED</span>
+</button>
+</div>
+<!-- Numeric Keypad -->
+<div class="bg-surface-container-low/80 backdrop-blur-xl px-2 pt-4 pb-10 grid grid-cols-3 gap-px border-t border-outline-variant/10">
+<!-- Row 1 -->
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">1</button>
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">2</button>
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">3</button>
+<!-- Row 2 -->
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">4</button>
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">5</button>
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">6</button>
+<!-- Row 3 -->
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">7</button>
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">8</button>
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">9</button>
+<!-- Row 4 -->
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">.</button>
+<button class="py-4 text-2xl font-headline font-bold text-on-surface hover:bg-surface-container-highest/40 transition-colors">0</button>
+<button class="py-4 text-on-surface hover:bg-surface-container-highest/40 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">backspace</span>
+</button>
+</div>
+</div>
+</body></html>

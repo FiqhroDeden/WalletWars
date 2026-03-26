@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WalletWars - Weekly Duel Results</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #090e1c;
+            color: #e1e4fa;
+        }
+        .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-mono-stats { font-family: 'JetBrains Mono', monospace; }
+        .glass-card {
+            background: rgba(30, 37, 59, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .liquid-gradient-blue {
+            background: linear-gradient(135deg, #8aacff 0%, #1b6ef2 100%);
+        }
+        .liquid-gradient-red {
+            background: linear-gradient(135deg, #ff7259 0%, #a61200 100%);
+        }
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .shimmer::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-25deg);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#1e253b",
+              "outline": "#707588",
+              "on-primary": "#002b6b",
+              "primary-container": "#749eff",
+              "primary-dim": "#1a6df1",
+              "tertiary-fixed-dim": "#61ee9a",
+              "primary-fixed": "#749eff",
+              "secondary-fixed": "#ffc4b9",
+              "secondary-fixed-dim": "#ffb0a1",
+              "error-container": "#9f0519",
+              "on-surface": "#e1e4fa",
+              "surface-container-lowest": "#000000",
+              "on-primary-fixed-variant": "#002966",
+              "secondary-dim": "#ff7259",
+              "surface-bright": "#242b43",
+              "surface-variant": "#1e253b",
+              "on-secondary-fixed-variant": "#a21200",
+              "background": "#090e1c",
+              "on-error-container": "#ffa8a3",
+              "on-error": "#490006",
+              "on-background": "#e1e4fa",
+              "inverse-primary": "#0058cd",
+              "surface-dim": "#090e1c",
+              "primary-fixed-dim": "#5b8fff",
+              "on-tertiary-fixed": "#004a27",
+              "on-tertiary-fixed-variant": "#006a3a",
+              "error": "#ff716c",
+              "on-primary-container": "#002054",
+              "on-tertiary-container": "#005f33",
+              "tertiary-fixed": "#70fda7",
+              "surface-tint": "#8aacff",
+              "primary": "#8aacff",
+              "secondary-container": "#a61200",
+              "on-primary-fixed": "#000000",
+              "inverse-on-surface": "#505466",
+              "outline-variant": "#434759",
+              "on-secondary": "#480400",
+              "on-surface-variant": "#a6aabf",
+              "surface": "#090e1c",
+              "surface-container-low": "#0d1323",
+              "tertiary": "#c2ffd1",
+              "tertiary-dim": "#61ee9a",
+              "tertiary-container": "#70fda7",
+              "surface-container-high": "#181f33",
+              "inverse-surface": "#faf8ff",
+              "on-secondary-container": "#ffdbd5",
+              "on-tertiary": "#006839",
+              "on-secondary-fixed": "#6d0800",
+              "error-dim": "#d7383b",
+              "surface-container": "#13192b",
+              "secondary": "#ff7259"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface overflow-x-hidden pb-32">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-slate-900/60 backdrop-blur-xl shadow-2xl shadow-blue-900/20 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border-2 border-primary/30 overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover" data-alt="professional male avatar profile picture with soft studio lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtM0TqSTYQuCpXafwa-zg3q6QqmC2kVYyDgf1_UyxjcsG8r4UquaRHoSs9OeAnYT3d4zyPQ8_TdVd3INMmNRUTfraS_-tP03ij-drRVHamhEkkAlitFBt7PCQRDNwQL9kCrviYcjFKMVBvikmcIRHhZ661_SoANuCLr3yfMZFFGIq88JGcAao_4SBtfvDUc-Ca5EvTvri-LfWXJ2xif1oUUz7oFIk6kpF_JlT3IGzkSjvSg5AOOKFBuH1df7ZFtiL8jAOO58m6WyKO"/>
+</div>
+<span class="font-headline font-black text-blue-500 italic text-xl tracking-tight">WalletWars</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-400 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="mt-24 px-5 space-y-8 max-w-2xl mx-auto">
+<!-- Epic VS Header -->
+<section class="relative flex items-stretch gap-3 h-48 mt-4">
+<!-- This Week (Hero Blue) -->
+<div class="flex-1 liquid-gradient-blue rounded-lg p-5 flex flex-col justify-between shadow-lg shadow-primary/20 relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-3xl"></div>
+<div class="z-10">
+<p class="font-headline text-[10px] uppercase tracking-[0.2em] text-on-primary/60">Current Status</p>
+<h2 class="font-headline text-2xl font-extrabold text-on-primary-fixed">THIS WEEK</h2>
+</div>
+<div class="z-10">
+<span class="font-mono-stats text-3xl font-bold text-on-primary-fixed">$2,410</span>
+<p class="text-[10px] font-bold text-on-primary/80">REMAINING BUDGET</p>
+</div>
+</div>
+<!-- VS Badge -->
+<div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-surface-container-highest rounded-full flex items-center justify-center shadow-2xl border-4 border-surface ring-1 ring-white/10">
+<span class="font-headline font-black text-xl italic text-primary italic">VS</span>
+</div>
+<!-- Last Week (Rival Red) -->
+<div class="flex-1 liquid-gradient-red rounded-lg p-5 flex flex-col items-end justify-between shadow-lg shadow-secondary/20 relative overflow-hidden">
+<div class="absolute -left-4 -bottom-4 w-24 h-24 bg-black/20 rounded-full blur-3xl"></div>
+<div class="z-10 text-right">
+<p class="font-headline text-[10px] uppercase tracking-[0.2em] text-white/50">Historical Duel</p>
+<h2 class="font-headline text-2xl font-extrabold text-white">LAST WEEK</h2>
+</div>
+<div class="z-10 text-right">
+<span class="font-mono-stats text-3xl font-bold text-white opacity-80">$1,890</span>
+<p class="text-[10px] font-bold text-white/60">ENDING BALANCE</p>
+</div>
+</div>
+</section>
+<!-- Round Results (Stacked Glass Cards) -->
+<section class="space-y-4">
+<h3 class="font-headline text-xs uppercase tracking-widest text-outline ml-1">Round Breakdowns</h3>
+<!-- Round 1: War Chest Discipline -->
+<div class="glass-card rounded-lg p-6 flex flex-col gap-4 shadow-xl border-t border-white/5">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+</div>
+<h4 class="font-headline text-sm font-bold">War Chest Discipline</h4>
+</div>
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full text-[10px] font-black tracking-tighter uppercase">✅ YOU WIN</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4">
+<div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full liquid-gradient-blue rounded-full shimmer" style="width: 85%"></div>
+</div>
+<span class="font-mono-stats text-xs font-bold w-12 text-right">85%</span>
+</div>
+<div class="flex items-center gap-4 opacity-40">
+<div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full liquid-gradient-red rounded-full" style="width: 62%"></div>
+</div>
+<span class="font-mono-stats text-xs font-bold w-12 text-right">62%</span>
+</div>
+</div>
+</div>
+<!-- Round 2: Saving Power -->
+<div class="glass-card rounded-lg p-6 flex flex-col gap-4 shadow-xl border-t border-white/5">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</div>
+<h4 class="font-headline text-sm font-bold">Saving Power</h4>
+</div>
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full text-[10px] font-black tracking-tighter uppercase">✅ YOU WIN</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4">
+<div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full liquid-gradient-blue rounded-full shimmer" style="width: 42%"></div>
+</div>
+<span class="font-mono-stats text-xs font-bold w-12 text-right">$420</span>
+</div>
+<div class="flex items-center gap-4 opacity-40">
+<div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full liquid-gradient-red rounded-full" style="width: 15%"></div>
+</div>
+<span class="font-mono-stats text-xs font-bold w-12 text-right">$150</span>
+</div>
+</div>
+</div>
+<!-- Round 3: Logging Consistency -->
+<div class="glass-card rounded-lg p-6 flex flex-col gap-4 shadow-xl border-t border-white/5">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+</div>
+<h4 class="font-headline text-sm font-bold">Logging Consistency</h4>
+</div>
+<span class="bg-secondary-container/20 text-secondary px-3 py-1 rounded-full text-[10px] font-black tracking-tighter uppercase">❌ PAST WINS</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4">
+<div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full liquid-gradient-blue rounded-full opacity-60" style="width: 70%"></div>
+</div>
+<span class="font-mono-stats text-xs font-bold w-12 text-right">7/10</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full liquid-gradient-red rounded-full shimmer" style="width: 100%"></div>
+</div>
+<span class="font-mono-stats text-xs font-bold w-12 text-right">10/10</span>
+</div>
+</div>
+</div>
+<!-- Round 4: Category Control -->
+<div class="glass-card rounded-lg p-6 flex flex-col gap-4 shadow-xl border-t border-white/5">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="category">category</span>
+</div>
+<h4 class="font-headline text-sm font-bold">Category Control</h4>
+</div>
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full text-[10px] font-black tracking-tighter uppercase">✅ YOU WIN</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-4">
+<div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full liquid-gradient-blue rounded-full shimmer" style="width: 92%"></div>
+</div>
+<span class="font-mono-stats text-xs font-bold w-12 text-right">92%</span>
+</div>
+<div class="flex items-center gap-4 opacity-40">
+<div class="flex-1 h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full liquid-gradient-red rounded-full" style="width: 45%"></div>
+</div>
+<span class="font-mono-stats text-xs font-bold w-12 text-right">45%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Final Result Card -->
+<section class="mt-12 mb-8">
+<div class="liquid-gradient-blue rounded-lg p-8 text-center relative overflow-hidden shadow-2xl shadow-blue-500/40">
+<!-- Background Decorative Pattern -->
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+<div class="relative z-10 space-y-4">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 rounded-full backdrop-blur-md border border-white/30">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+<span class="text-[10px] font-black uppercase tracking-widest">Climbing ↗️ +18%</span>
+</div>
+<h2 class="font-headline text-4xl font-black text-on-primary-fixed drop-shadow-lg">🏆 YOU WIN 3-1!</h2>
+<div class="flex items-center justify-center gap-4 pt-2">
+<div class="bg-on-primary-fixed text-primary px-6 py-2 rounded-full font-headline font-black text-xl shadow-inner">
+                            +200 XP
+                        </div>
+</div>
+<p class="text-on-primary-fixed/80 font-bold text-sm max-w-[240px] mx-auto leading-relaxed">
+                        You outpaced your past self by maintaining higher war chest discipline throughout the week.
+                    </p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-slate-900/60 backdrop-blur-2xl rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.4)] bg-gradient-to-t from-blue-500/5 to-transparent">
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-blue-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="chart_bar">bar_chart</span>
+<span class="font-headline font-bold text-[10px] uppercase tracking-widest">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-blue-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="list_alt">list_alt</span>
+<span class="font-headline font-bold text-[10px] uppercase tracking-widest">Log</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-400 drop-shadow-[0_0_8px_rgba(27,110,242,0.6)] active:scale-110 duration-300 spring-bouncy" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="sports_kabaddi" style="font-variation-settings: 'FILL' 1;">sports_kabaddi</span>
+<span class="font-headline font-bold text-[10px] uppercase tracking-widest">Duel</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-blue-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="flag">flag</span>
+<span class="font-headline font-bold text-[10px] uppercase tracking-widest">Quest</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 opacity-60 hover:text-blue-300 transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="emoji_events">emoji_events</span>
+<span class="font-headline font-bold text-[10px] uppercase tracking-widest">Profile</span>
+</a>
+</nav>
+</body></html>
