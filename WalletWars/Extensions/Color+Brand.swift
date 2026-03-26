@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 extension Color {
 
@@ -39,15 +40,29 @@ extension Color {
     static let streak      = Color(hex: "F5A623")
     static let streakDim   = Color(hex: "B87A0A")
 
-    // MARK: - Surface Neutrals
+    // MARK: - Surface Neutrals (Adaptive Light/Dark)
 
-    static let surface     = Color(hex: "F8F7F6")
-    static let surfaceLow  = Color(hex: "F1F0EF")
-    static let surfaceHigh = Color(hex: "E3E2E0")
-    static let card        = Color.white
-    static let textPrimary = Color(hex: "2E2F2F")
-    static let textMid     = Color(hex: "5B5C5B")
-    static let textLight   = Color(hex: "8A8B8A")
+    static let surface = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? UIColor(hex: "090E1C") : UIColor(hex: "F8F7F6")
+    })
+    static let surfaceLow = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? UIColor(hex: "0D1323") : UIColor(hex: "F1F0EF")
+    })
+    static let surfaceHigh = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? UIColor(hex: "1E253B") : UIColor(hex: "E3E2E0")
+    })
+    static let card = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? UIColor(hex: "141B2E") : UIColor(hex: "FFFFFF")
+    })
+    static let textPrimary = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? UIColor(hex: "F0F0F0") : UIColor(hex: "2E2F2F")
+    })
+    static let textMid = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? UIColor(hex: "9A9B9C") : UIColor(hex: "5B5C5B")
+    })
+    static let textLight = Color(UIColor { traits in
+        traits.userInterfaceStyle == .dark ? UIColor(hex: "5E6068") : UIColor(hex: "8A8B8A")
+    })
 
     // MARK: - War Chest State Colors
 
@@ -77,6 +92,29 @@ extension Color {
             red: Double(r) / 255,
             green: Double(g) / 255,
             blue: Double(b) / 255
+        )
+    }
+}
+
+// MARK: - UIColor Hex Initializer
+
+extension UIColor {
+    convenience init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r, g, b: UInt64
+        switch hex.count {
+        case 6:
+            (r, g, b) = ((int >> 16) & 0xFF, (int >> 8) & 0xFF, int & 0xFF)
+        default:
+            (r, g, b) = (0, 0, 0)
+        }
+        self.init(
+            red: CGFloat(r) / 255,
+            green: CGFloat(g) / 255,
+            blue: CGFloat(b) / 255,
+            alpha: 1
         )
     }
 }
