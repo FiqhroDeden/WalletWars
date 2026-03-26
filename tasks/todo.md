@@ -96,22 +96,21 @@
 - [x] LifetimeStatsCard (transactions, quests, duels, win rate)
 - [x] Wire to ProfileViewModel
 
-## Sprint 9: Insights Engine
+## Sprint 9: Insights Engine — COMPLETE
 
-- [ ] InsightService (smart suggestions, trend detection)
-- [ ] Category alerts (overspending detection)
-- [ ] Spending trend analysis (week-over-week)
-- [ ] InsightCard variants (tip, alert, celebration)
-- [ ] Integration with Dashboard
+- [x] InsightService (contextual insight generation from spending data)
+- [x] Dynamic InsightCard (accepts text prop instead of hardcoded)
+- [x] DashboardViewModel integration (generates insight on load)
+- [x] Insight types: streak milestones, week-over-week comparison, budget tracking, level progress
 
-## Sprint 10: Onboarding
+## Sprint 10: Onboarding — COMPLETE
 
-- [ ] OnboardingView (3-page flow)
-- [ ] Page 1: Welcome + value prop
-- [ ] Page 2: Budget setup (monthly budget input)
-- [ ] Page 3: Category selection
-- [ ] Wire to OnboardingViewModel
-- [ ] Conditional show on first launch (hasCompletedOnboarding)
+- [x] OnboardingView (3-page TabView with page indicators)
+- [x] Page 1: "Your wallet has a rival" — VS shields hook
+- [x] Page 2: "How WalletWars Works" — 4 feature cards (LOG, DEFEND, DUEL, LEVEL UP)
+- [x] Page 3: Budget setup — amount input + "Start Fighting" CTA
+- [x] OnboardingViewModel (budget input, complete onboarding flag)
+- [x] ContentView conditional: fullScreenCover on first launch if !hasCompletedOnboarding
 
 ## Sprint 11: Polish
 
