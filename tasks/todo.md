@@ -112,15 +112,14 @@
 - [x] OnboardingViewModel (budget input, complete onboarding flag)
 - [x] ContentView conditional: fullScreenCover on first launch if !hasCompletedOnboarding
 
-## Sprint 11: Polish
+## Sprint 11: Polish — IN PROGRESS
 
-- [ ] Empty states (no transactions, no quests, first week)
-- [ ] Dark mode support
-- [ ] Accessibility (VoiceOver, Dynamic Type)
-- [ ] Performance optimization (lazy loading, query optimization)
-- [ ] App icon finalization
-- [ ] NotificationService (daily reminder, streak warning, duel results)
-- [ ] Settings UI (budget, currency, categories, notifications)
+- [ ] SettingsView UI (budget, currency, category management)
+- [ ] NotificationService (daily reminder, streak warning)
+- [ ] Empty states polish (already have basic ones, enhance with illustrations)
+- [ ] App icon finalization (already generated, verify in Xcode)
+- [ ] Dark mode verification (ensure all Color tokens work in dark mode)
+- [ ] Accessibility (VoiceOver labels, Dynamic Type support)
 
 ---
 
