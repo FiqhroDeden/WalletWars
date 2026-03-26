@@ -31,7 +31,7 @@ struct WalletWarsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .onAppear {
+                .task {
                     let context = sharedModelContainer.mainContext
                     CategorySeedService.seedIfNeeded(context: context)
                     #if DEBUG
