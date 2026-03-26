@@ -52,7 +52,7 @@ struct CategoryTests {
         CategorySeedService.seedIfNeeded(context: context)
 
         let descriptor = FetchDescriptor<Category>(
-            sortBy: [SortDescriptor(\.sortOrder)]
+            sortBy: [SortDescriptor<Category>(\.sortOrder)]
         )
         let sorted = try context.fetch(descriptor)
         #expect(sorted[0].name == "Food & Drink")
@@ -139,8 +139,8 @@ struct CategoryTests {
         let context = container.mainContext
 
         let vm = SettingsViewModel(context: context)
-        try vm.addCategory(name: "Pets", icon: "pawprint.fill", colorHex: "AA55CC")
-        try vm.addCategory(name: "Gifts", icon: "gift.fill", colorHex: "BB55DD")
+        _ = try vm.addCategory(name: "Pets", icon: "pawprint.fill", colorHex: "AA55CC")
+        _ = try vm.addCategory(name: "Gifts", icon: "gift.fill", colorHex: "BB55DD")
         try vm.loadSettings()
 
         let toArchive = vm.categories.first { $0.name == "Pets" }!
@@ -176,7 +176,7 @@ struct CategoryTests {
         try vm.loadSettings()
 
         for i in 1...4 {
-            try vm.addCategory(name: "Custom\(i)", icon: "star", colorHex: "AABBCC")
+            _ = try vm.addCategory(name: "Custom\(i)", icon: "star", colorHex: "AABBCC")
         }
 
         // At limit — archive one custom
