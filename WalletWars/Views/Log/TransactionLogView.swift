@@ -99,19 +99,26 @@ private extension TransactionLogView {
 
             VStack(spacing: 0) {
                 ForEach(group.transactions, id: \.id) { transaction in
-                    LogTransactionRow(transaction: transaction)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
+                    Button {
+                        selectedTransaction = transaction
+                        showEdit = true
+                    } label: {
+                        LogTransactionRow(transaction: transaction)
+                    }
+                    .buttonStyle(.plain)
+                    .contextMenu {
+                        Button {
                             selectedTransaction = transaction
                             showEdit = true
+                        } label: {
+                            Label("Edit", systemImage: "pencil")
                         }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button(role: .destructive) {
-                                deleteTransaction(transaction)
-                            } label: {
-                                Label("Delete", systemImage: "trash.fill")
-                            }
+                        Button(role: .destructive) {
+                            deleteTransaction(transaction)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
                         }
+                    }
 
                     if transaction.id != group.transactions.last?.id {
                         Divider().padding(.leading, 48)
