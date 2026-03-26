@@ -64,17 +64,17 @@
 - [ ] XPFloatView animation component (deferred to polish sprint)
 - [ ] Level-up celebration UI (deferred to polish sprint)
 
-## Sprint 6: Weekly Duel
+## Sprint 6: Weekly Duel — COMPLETE
 
-- [ ] DuelService (snapshot creation, 4-round comparison)
-- [ ] WeeklySnapshot creation at week boundary
-- [ ] DuelView (VS card, round cards, momentum badge)
-- [ ] DuelResultOverlay (win/loss/draw celebration)
-- [ ] LiveStandingsView (current week vs last week)
-- [ ] DuelHistoryList (past duel results)
-- [ ] MomentumBadge component
-- [ ] BGTaskScheduler for Monday snapshot
-- [ ] Wire to DuelViewModel
+- [x] DuelService (4-round comparison, result determination, round details)
+- [x] DuelViewModel (load duel data, projections, momentum calculation)
+- [x] DuelView (3 states: first week, mid-week battle, results)
+- [x] VSCard (YOU vs PAST YOU with blue/red shields)
+- [x] RoundCard (comparison bars with winner indicators)
+- [x] DuelResultBanner (WIN/LOSS/DRAW with XP reward + momentum)
+- [x] DuelHistoryList (horizontal scroll of past duel chips)
+- [ ] BGTaskScheduler for Monday snapshot (deferred to polish sprint)
+- [ ] WeeklySnapshot auto-creation at week boundary (deferred to polish sprint)
 
 ## Sprint 7: Saving Quests
 
