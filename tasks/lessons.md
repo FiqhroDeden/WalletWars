@@ -12,4 +12,4 @@
 ## Sprint 1
 
 - **`Category` name collision with Darwin:** Our `Category` model clashes with `Darwin.Category` (OpaquePointer). In test files, add `private typealias Category = WalletWars.Category` after the import block. This also affects any file that uses `FetchDescriptor<Category>` or `Category(...)` initializer.
-- **SwiftData `#Predicate` enum comparison:** Cannot use enum cases directly inside predicates (`QuestStatus.active` or `.active`). Also cannot use `.rawValue` — crashes at runtime with "rawValue is not a member". Fix: capture the enum value in a local variable OUTSIDE the closure, then compare directly: `let status = QuestStatus.active; #Predicate { $0.status == status }`. SwiftData handles the comparison internally.
+- **SwiftData `#Predicate` enum comparison:** Enum comparisons in `#Predicate` do NOT work — not inline (`.active`), not qualified (`QuestStatus.active`), not captured variable, not `.rawValue`. ALL approaches fail at compile or runtime. **Only fix:** fetch all records with `FetchDescriptor<T>()` and filter in memory: `allQuests.filter { $0.status == .active }`. This is a known SwiftData limitation with `Codable` enum properties.
