@@ -45,54 +45,53 @@ private extension VSCard {
 
 private extension VSCard {
     var avatarRow: some View {
-        HStack(spacing: 24) {
-            avatarShield(
-                label: "YOU",
-                subtitle: "This Week",
-                color: Color.hero,
-                icon: "shield.fill"
-            )
-
-            Text("VS")
-                .font(.custom("PlusJakartaSans-ExtraBold", size: 20))
-                .foregroundStyle(Color.textLight)
-
-            if hasOpponent {
-                avatarShield(
-                    label: "PAST",
-                    subtitle: "Last Week",
-                    color: Color.rival,
-                    icon: "shield.fill"
-                )
-            } else {
-                avatarShield(
-                    label: "???",
-                    subtitle: "No rival yet",
-                    color: Color.textLight,
-                    icon: "questionmark.circle.fill"
-                )
-            }
+        HStack(spacing: 20) {
+            heroSide
+            vsLabel
+            rivalSide
         }
     }
 
-    func avatarShield(label: String, subtitle: String, color: Color, icon: String) -> some View {
+    var heroSide: some View {
         VStack(spacing: 6) {
-            ZStack {
-                Circle()
-                    .fill(color.opacity(0.15))
-                    .frame(width: 56, height: 56)
+            HeroAvatar(size: 72)
 
-                Image(systemName: icon)
-                    .font(.system(size: 24))
-                    .foregroundStyle(color)
-            }
-
-            Text(label)
+            Text("YOU")
                 .font(.custom("PlusJakartaSans-ExtraBold", size: 12))
                 .tracking(1)
-                .foregroundStyle(color)
+                .foregroundStyle(Color.hero)
 
-            Text(subtitle)
+            Text("This Week")
+                .font(.custom("PlusJakartaSans-Regular", size: 10))
+                .foregroundStyle(Color.textLight)
+        }
+    }
+
+    var vsLabel: some View {
+        Text("VS")
+            .font(.custom("PlusJakartaSans-ExtraBold", size: 20))
+            .foregroundStyle(Color.textLight)
+    }
+
+    var rivalSide: some View {
+        VStack(spacing: 6) {
+            if hasOpponent {
+                RivalAvatar(size: 72)
+
+                Text("PAST")
+                    .font(.custom("PlusJakartaSans-ExtraBold", size: 12))
+                    .tracking(1)
+                    .foregroundStyle(Color.rival)
+            } else {
+                MysteryAvatar(size: 72)
+
+                Text("???")
+                    .font(.custom("PlusJakartaSans-ExtraBold", size: 12))
+                    .tracking(1)
+                    .foregroundStyle(Color.textLight)
+            }
+
+            Text(hasOpponent ? "Last Week" : "No rival yet")
                 .font(.custom("PlusJakartaSans-Regular", size: 10))
                 .foregroundStyle(Color.textLight)
         }

@@ -9,7 +9,7 @@ struct OnboardingPage1: View {
     var body: some View {
         VStack(spacing: 32) {
             Spacer()
-            shieldBattle
+            battleScene
             tagline
             subtitle
             Spacer()
@@ -18,35 +18,30 @@ struct OnboardingPage1: View {
     }
 }
 
-// MARK: - Shields
+// MARK: - Battle Scene
 
 private extension OnboardingPage1 {
-    var shieldBattle: some View {
-        HStack(spacing: 28) {
-            shieldAvatar(label: "YOU", color: Color.hero, icon: "shield.fill")
+    var battleScene: some View {
+        HStack(spacing: 20) {
+            VStack(spacing: 8) {
+                HeroAvatar(size: 96)
+                Text("YOU")
+                    .font(.custom("PlusJakartaSans-ExtraBold", size: 11))
+                    .tracking(2)
+                    .foregroundStyle(Color.hero)
+            }
 
             Text("VS")
-                .font(.custom("PlusJakartaSans-ExtraBold", size: 22))
+                .font(.custom("PlusJakartaSans-ExtraBold", size: 24))
                 .foregroundStyle(.white.opacity(0.4))
 
-            shieldAvatar(label: "PAST", color: Color.rival, icon: "shield.fill")
-        }
-    }
-
-    func shieldAvatar(label: String, color: Color, icon: String) -> some View {
-        VStack(spacing: 8) {
-            ZStack {
-                Circle()
-                    .fill(color.opacity(0.2))
-                    .frame(width: 72, height: 72)
-                Image(systemName: icon)
-                    .font(.system(size: 32))
-                    .foregroundStyle(color)
+            VStack(spacing: 8) {
+                RivalAvatar(size: 96)
+                Text("PAST")
+                    .font(.custom("PlusJakartaSans-ExtraBold", size: 11))
+                    .tracking(2)
+                    .foregroundStyle(Color.rival)
             }
-            Text(label)
-                .font(.custom("PlusJakartaSans-ExtraBold", size: 11))
-                .tracking(2)
-                .foregroundStyle(color)
         }
     }
 }
