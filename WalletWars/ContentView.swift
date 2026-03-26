@@ -2,60 +2,35 @@
 //  ContentView.swift
 //  WalletWars
 //
-//  Created by ZoldyckD on 26/03/26.
-//
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @State private var selectedTab = 0
 
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        TabView(selection: $selectedTab) {
+            Tab("Dashboard", systemImage: "chart.bar.fill", value: 0) {
+                DashboardView()
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
+
+            Tab("Log", systemImage: "list.bullet.rectangle.fill", value: 1) {
+                TransactionLogView()
             }
-        } detail: {
-            Text("Select an item")
-        }
-    }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
+            Tab("Duel", systemImage: "figure.fencing", value: 2) {
+                DuelView()
+            }
+            .tint(Color.rival)
 
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+            Tab("Quest", systemImage: "flag.fill", value: 3) {
+                QuestView()
+            }
+
+            Tab("Profile", systemImage: "trophy.fill", value: 4) {
+                ProfileView()
             }
         }
+        .tint(Color.hero)
     }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }

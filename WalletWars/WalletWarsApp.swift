@@ -2,8 +2,6 @@
 //  WalletWarsApp.swift
 //  WalletWars
 //
-//  Created by ZoldyckD on 26/03/26.
-//
 
 import SwiftUI
 import SwiftData
@@ -12,7 +10,14 @@ import SwiftData
 struct WalletWarsApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Transaction.self,
+            Category.self,
+            SavingQuest.self,
+            QuestMilestone.self,
+            PlayerProfile.self,
+            WeeklySnapshot.self,
+            CurrentWeekTracker.self,
+            DailyLog.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -26,6 +31,10 @@ struct WalletWarsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onAppear {
+                    let context = sharedModelContainer.mainContext
+                    CategorySeedService.seedIfNeeded(context: context)
+                }
         }
         .modelContainer(sharedModelContainer)
     }
