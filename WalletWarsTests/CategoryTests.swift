@@ -4,6 +4,7 @@
 //
 
 import Testing
+import Foundation
 import SwiftData
 @testable import WalletWars
 
@@ -51,10 +52,8 @@ struct CategoryTests {
 
         CategorySeedService.seedIfNeeded(context: context)
 
-        let descriptor = FetchDescriptor<Category>(
-            sortBy: [SortDescriptor<Category>(\.sortOrder)]
-        )
-        let sorted = try context.fetch(descriptor)
+        let all = try context.fetch(FetchDescriptor<Category>())
+        let sorted = all.sorted { $0.sortOrder < $1.sortOrder }
         #expect(sorted[0].name == "Food & Drink")
         #expect(sorted[7].name == "Other")
     }
