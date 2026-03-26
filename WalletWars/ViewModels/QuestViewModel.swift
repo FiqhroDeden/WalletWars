@@ -29,16 +29,18 @@ final class QuestViewModel {
 
     /// Load active quest and completed quests.
     func loadQuests() throws {
+        let activeRaw = QuestStatus.active.rawValue
         let activeDescriptor = FetchDescriptor<SavingQuest>(
             predicate: #Predicate<SavingQuest> { quest in
-                quest.status == QuestStatus.active
+                quest.status.rawValue == activeRaw
             }
         )
         activeQuest = try context.fetch(activeDescriptor).first
 
+        let completedRaw = QuestStatus.completed.rawValue
         let completedDescriptor = FetchDescriptor<SavingQuest>(
             predicate: #Predicate<SavingQuest> { quest in
-                quest.status == QuestStatus.completed
+                quest.status.rawValue == completedRaw
             },
             sortBy: [SortDescriptor(\.completedAt, order: .reverse)]
         )
@@ -52,9 +54,10 @@ final class QuestViewModel {
     @discardableResult
     func createQuest(name: String, targetAmount: Double, deadline: Date? = nil) throws -> SavingQuest {
         // Enforce max 1 active
+        let activeRawValue = QuestStatus.active.rawValue
         let activeDescriptor = FetchDescriptor<SavingQuest>(
             predicate: #Predicate<SavingQuest> { quest in
-                quest.status == QuestStatus.active
+                quest.status.rawValue == activeRawValue
             }
         )
         let activeCount = try context.fetchCount(activeDescriptor)
