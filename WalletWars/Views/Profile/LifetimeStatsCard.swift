@@ -28,7 +28,11 @@ struct LifetimeStatsCard: View {
                 statRow(label: "Win Rate", value: winRate)
             }
             .padding(12)
-            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .background(Color.card, in: RoundedRectangle(cornerRadius: 14))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14)
+                    .strokeBorder(Color.textLight.opacity(0.1), lineWidth: 1)
+            }
         }
     }
 

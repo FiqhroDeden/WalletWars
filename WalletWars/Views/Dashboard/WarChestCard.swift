@@ -19,7 +19,7 @@ struct WarChestCard: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .background(Color.card, in: RoundedRectangle(cornerRadius: 20))
         .overlay {
             RoundedRectangle(cornerRadius: 20)
                 .strokeBorder(stateColor.opacity(0.2), lineWidth: 1.5)

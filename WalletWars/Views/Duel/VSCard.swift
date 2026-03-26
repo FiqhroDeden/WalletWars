@@ -16,7 +16,11 @@ struct VSCard: View {
         }
         .padding(20)
         .frame(maxWidth: .infinity)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .background(Color.card, in: RoundedRectangle(cornerRadius: 20))
+        .overlay {
+            RoundedRectangle(cornerRadius: 20)
+                .strokeBorder(Color.textLight.opacity(0.1), lineWidth: 1)
+        }
     }
 }
 

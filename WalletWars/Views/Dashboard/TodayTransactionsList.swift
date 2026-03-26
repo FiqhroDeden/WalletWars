@@ -14,7 +14,11 @@ struct TodayTransactionsList: View {
             transactionRows
         }
         .padding(16)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .background(Color.card, in: RoundedRectangle(cornerRadius: 16))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color.textLight.opacity(0.1), lineWidth: 1)
+        }
     }
 }
 

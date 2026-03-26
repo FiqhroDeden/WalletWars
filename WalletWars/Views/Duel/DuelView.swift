@@ -85,7 +85,11 @@ private extension DuelView {
             statRow(label: "Total saved", value: String(format: "$%.2f", tracker.totalSaved))
         }
         .padding(16)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        .background(Color.card, in: RoundedRectangle(cornerRadius: 14))
+        .overlay {
+            RoundedRectangle(cornerRadius: 14)
+                .strokeBorder(Color.textLight.opacity(0.1), lineWidth: 1)
+        }
     }
 
     func statRow(label: String, value: String) -> some View {
