@@ -11,6 +11,7 @@ struct QuestView: View {
     @State private var viewModel: QuestViewModel?
     @State private var showDeposit = false
     @State private var showNewQuest = false
+    @State private var showAbandonConfirm = false
 
     var body: some View {
         NavigationStack {
@@ -93,14 +94,26 @@ private extension QuestView {
 
             // Abandon
             Button {
-                try? viewModel?.abandonQuest()
-                try? viewModel?.loadQuests()
+                showAbandonConfirm = true
             } label: {
                 Text("Abandon Quest")
                     .font(.custom("PlusJakartaSans-Regular", size: 13))
                     .foregroundStyle(Color.rival)
             }
             .padding(.top, 4)
+            .confirmationDialog(
+                "Abandon \"\(quest.name)\"?",
+                isPresented: $showAbandonConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("Abandon Quest", role: .destructive) {
+                    try? viewModel?.abandonQuest()
+                    try? viewModel?.loadQuests()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Your progress will be lost. This cannot be undone.")
+            }
         }
     }
 }

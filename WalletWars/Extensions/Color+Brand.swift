@@ -52,7 +52,7 @@ extension Color {
         traits.userInterfaceStyle == .dark ? UIColor(hex: "1E253B") : UIColor(hex: "E3E2E0")
     })
     static let card = Color(UIColor { traits in
-        traits.userInterfaceStyle == .dark ? UIColor(hex: "141B2E") : UIColor(hex: "FFFFFF")
+        traits.userInterfaceStyle == .dark ? UIColor(hex: "1A2340") : UIColor(hex: "FFFFFF")
     })
     static let textPrimary = Color(UIColor { traits in
         traits.userInterfaceStyle == .dark ? UIColor(hex: "F0F0F0") : UIColor(hex: "2E2F2F")
