@@ -6,6 +6,8 @@
 import SwiftUI
 
 struct InsightCard: View {
+    let text: String
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: "sparkles")
@@ -18,7 +20,7 @@ struct InsightCard: View {
                     .font(.custom("PlusJakartaSans-Bold", size: 12))
                     .foregroundStyle(Color.textPrimary)
 
-                Text("Your \"Eating Out\" expense is 15% lower than last week. Maintain this defensive stance to unlock the War Saver badge by Friday.")
+                Text(text)
                     .font(.custom("PlusJakartaSans-Regular", size: 13))
                     .foregroundStyle(Color.textMid)
                     .lineSpacing(2)

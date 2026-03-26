@@ -84,7 +84,7 @@ private extension DashboardView {
 
 private extension DashboardView {
     var insightSection: some View {
-        InsightCard()
+        InsightCard(text: viewModel?.insightText ?? "Every transaction logged is a step toward financial mastery.")
     }
 }
 

@@ -17,6 +17,7 @@ final class DashboardViewModel {
     var logStreak: Int = 0
     var budgetStreak: Int = 0
     var monthlyBudget: Double = 0
+    var insightText: String = "Every transaction logged is a step toward financial mastery."
 
     private let context: ModelContext
 
@@ -43,6 +44,15 @@ final class DashboardViewModel {
 
         // Load today's transactions
         todayTransactions = try loadTodayTransactions()
+
+        // Generate insight
+        let tracker = CurrentWeekTracker.fetchOrCreate(context: context)
+        let lastSnapshot = try? DuelService.lastSnapshot(context: context)
+        insightText = InsightService.generateInsight(
+            tracker: tracker,
+            lastSnapshot: lastSnapshot,
+            profile: profile
+        )
     }
 
     /// Fetch today's transactions sorted by date descending.
