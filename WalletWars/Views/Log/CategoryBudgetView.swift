@@ -12,6 +12,7 @@ struct CategoryBudgetView: View {
         filter: #Predicate<Category> { !$0.isArchived },
         sort: \Category.sortOrder
     ) private var categories: [Category]
+    var onSelectCategory: ((Category) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -53,11 +54,16 @@ private extension CategoryBudgetView {
                 let spent = spending(for: category)
                 let budget = category.budgetAmount ?? 0
 
-                CategoryBudgetRow(
-                    category: category,
-                    spent: spent,
-                    budget: budget
-                )
+                Button {
+                    onSelectCategory?(category)
+                } label: {
+                    CategoryBudgetRow(
+                        category: category,
+                        spent: spent,
+                        budget: budget
+                    )
+                }
+                .buttonStyle(.plain)
 
                 if category.id != categories.last?.id {
                     Divider().padding(.leading, 48)

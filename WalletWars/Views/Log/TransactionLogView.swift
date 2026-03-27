@@ -20,7 +20,11 @@ struct TransactionLogView: View {
             ScrollView {
                 LazyVStack(spacing: 16) {
                     summaryCard
-                    CategoryBudgetView()
+                    CategoryBudgetView { category in
+                        filterCategory = category
+                        filterPeriod = .thisMonth
+                        applyFilters()
+                    }
                     transactionSections
                 }
                 .padding(.horizontal, 16)
