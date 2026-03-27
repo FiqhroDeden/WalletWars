@@ -240,6 +240,7 @@ private struct LogTransactionRow: View {
             amountAndTime
         }
         .padding(.vertical, 10)
+        .contentShape(Rectangle())
     }
 
     private var categoryIcon: some View {
