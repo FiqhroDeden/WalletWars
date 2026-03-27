@@ -12,6 +12,9 @@ struct QuickCaptureSheet: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel: QuickCaptureViewModel?
     @State private var showSuccess = false
+    @State private var showOverBudgetWarning = false
+    @State private var showOverBudgetConfirm = false
+    @State private var overBudgetAmount: Double = 0
     @AppStorage("hasRequestedReview") private var hasRequestedReview = false
     @Query(
         filter: #Predicate<Category> { !$0.isArchived },
@@ -36,6 +39,17 @@ struct QuickCaptureSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { cancelToolbar }
             .overlay { successOverlay }
+            .overlay(alignment: .top) { overBudgetBanner }
+            .confirmationDialog(
+                "You're already $\(Int(overBudgetAmount)) over budget today.",
+                isPresented: $showOverBudgetConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("Spend Anyway", role: .destructive) { performSave() }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Logging this will make it harder to recover your shield streak.")
+            }
             .onAppear { setupViewModel() }
         }
     }
@@ -195,6 +209,26 @@ private extension QuickCaptureSheet {
 private extension QuickCaptureSheet {
     func saveTransaction() {
         guard let vm = viewModel else { return }
+
+        if vm.isAlreadyOverBudget() {
+            // Level 2: already over budget — require confirmation
+            overBudgetAmount = vm.wouldExceedBudget() ?? 0
+            showOverBudgetConfirm = true
+        } else if let excess = vm.wouldExceedBudget() {
+            // Level 1: would exceed budget — amber warning, save immediately
+            overBudgetAmount = excess
+            withAnimation(.springFast) { showOverBudgetWarning = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                withAnimation(.springFast) { showOverBudgetWarning = false }
+            }
+            performSave()
+        } else {
+            performSave()
+        }
+    }
+
+    func performSave() {
+        guard let vm = viewModel else { return }
         do {
             try vm.saveTransaction()
             withAnimation(.springMedium) {
@@ -224,6 +258,37 @@ private extension QuickCaptureSheet {
             }
         } catch {
             // TODO: Show error alert
+        }
+    }
+}
+
+// MARK: - Over Budget Warning
+
+private extension QuickCaptureSheet {
+    @ViewBuilder
+    var overBudgetBanner: some View {
+        if showOverBudgetWarning {
+            HStack(spacing: 10) {
+                Image(systemName: "shield.slash.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(Color.streak)
+
+                Text("This will break your shield for today.")
+                    .font(.custom("PlusJakartaSans-Bold", size: 13))
+                    .foregroundStyle(Color.textPrimary)
+
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color.streakBG, in: RoundedRectangle(cornerRadius: 12))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(Color.streak.opacity(0.4), lineWidth: 1)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 8)
+            .transition(.move(edge: .top).combined(with: .opacity))
         }
     }
 }

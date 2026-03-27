@@ -88,6 +88,31 @@ final class QuickCaptureViewModel {
         return transaction
     }
 
+    /// Returns how much the current amount would exceed today's budget, or nil if under budget.
+    func wouldExceedBudget() -> Double? {
+        guard let amount = parsedAmount else { return nil }
+        let profile = PlayerProfile.fetchOrCreate(context: context)
+        guard let dailyBudget = try? WarChestService.dailyBudgetForToday(
+            monthlyBudget: profile.monthlyBudget,
+            context: context
+        ) else { return nil }
+        let todayLog = DailyLog.fetchOrCreate(for: .now, dailyBudget: dailyBudget, context: context)
+        let projected = todayLog.totalSpent + amount
+        let excess = projected - dailyBudget
+        return excess > 0 ? excess : nil
+    }
+
+    /// Returns true if today's spending is already over the daily budget.
+    func isAlreadyOverBudget() -> Bool {
+        let profile = PlayerProfile.fetchOrCreate(context: context)
+        guard let dailyBudget = try? WarChestService.dailyBudgetForToday(
+            monthlyBudget: profile.monthlyBudget,
+            context: context
+        ) else { return false }
+        let todayLog = DailyLog.fetchOrCreate(for: .now, dailyBudget: dailyBudget, context: context)
+        return !todayLog.isUnderBudget
+    }
+
     /// Reset input fields after successful save.
     func resetFields() {
         amountText = ""
