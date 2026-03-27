@@ -15,6 +15,7 @@ struct TransactionLogView: View {
     @State private var filterPeriod: FilterPeriod = .thisMonth
     @State private var filterCategory: Category?
     @State private var monthlyBudget: Double = 0
+    @State private var highlightedTransactionID: UUID?
 
     var body: some View {
         NavigationStack {
@@ -48,6 +49,14 @@ struct TransactionLogView: View {
                 onSave: { amount, note, cat, clearCat in
                     try? viewModel?.updateTransaction(tx, newAmount: amount, newNote: note, newCategory: cat, clearCategory: clearCat)
                     try? viewModel?.loadTransactions()
+                    withAnimation(.springMedium) {
+                        highlightedTransactionID = tx.id
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                        withAnimation(.springGentle) {
+                            highlightedTransactionID = nil
+                        }
+                    }
                 },
                 onDelete: {
                     try? viewModel?.deleteTransaction(tx)
@@ -114,6 +123,12 @@ private extension TransactionLogView {
                         LogTransactionRow(transaction: transaction)
                     }
                     .buttonStyle(.plain)
+                    .background(
+                        highlightedTransactionID == transaction.id
+                            ? Color.victory.opacity(0.15)
+                            : Color.clear
+                    )
+                    .animation(.springMedium, value: highlightedTransactionID)
                     .contextMenu {
                         Button {
                             editingTransaction = transaction
