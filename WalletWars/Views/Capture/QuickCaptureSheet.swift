@@ -297,20 +297,20 @@ private extension QuickCaptureSheet {
             HStack(spacing: 10) {
                 Image(systemName: "shield.slash.fill")
                     .font(.system(size: 16))
-                    .foregroundStyle(Color.streak)
+                    .foregroundStyle(Color.streakLight)
 
                 Text("This will break your shield for today.")
                     .font(.custom("PlusJakartaSans-Bold", size: 13))
-                    .foregroundStyle(Color.textPrimary)
+                    .foregroundStyle(.white)
 
                 Spacer()
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
-            .background(Color.streakBG, in: RoundedRectangle(cornerRadius: 12))
+            .background(Color.streakDim, in: RoundedRectangle(cornerRadius: 12))
             .overlay {
                 RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(Color.streak.opacity(0.4), lineWidth: 1)
+                    .strokeBorder(Color.streak.opacity(0.5), lineWidth: 1)
             }
             .padding(.horizontal, 20)
             .padding(.top, 8)
