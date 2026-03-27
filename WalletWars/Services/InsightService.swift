@@ -66,4 +66,44 @@ enum InsightService {
 
         return insights.randomElement()!
     }
+
+    /// Generate insight with overspend awareness. Priority: bad behavior messages first.
+    static func generateInsight(
+        tracker: CurrentWeekTracker,
+        lastSnapshot: WeeklySnapshot?,
+        profile: PlayerProfile,
+        todayLog: DailyLog?
+    ) -> String {
+        // Priority 1: Daily overspend
+        if let log = todayLog, !log.isUnderBudget {
+            let over = log.totalSpent - log.dailyBudget
+            if over > 0 {
+                return "You spent $\(Int(over)) more than your daily shield allows. That's tomorrow's budget eaten today."
+            }
+        }
+
+        // Priority 2: Monthly budget warning
+        if profile.monthlyBudget > 0 {
+            let remainingDays = WarChestService.remainingDaysInMonth()
+            let monthSpent = tracker.totalSpent
+            let monthPct = monthSpent / profile.monthlyBudget
+
+            if monthPct > 1.0 {
+                return "Monthly budget exceeded. You're \(Int((monthPct - 1.0) * 100))% over. Every transaction digs deeper."
+            }
+            if monthPct > 0.8 {
+                return "You've burned through \(Int(monthPct * 100))% of your monthly budget with \(remainingDays) days left. The walls are closing in."
+            }
+        }
+
+        // Priority 3: Budget streak just broke
+        if profile.budgetStreakCount == 0 && profile.budgetStreakBest > 3 {
+            if let log = todayLog, !log.isUnderBudget {
+                return "Your budget streak just shattered. Building it back starts tomorrow."
+            }
+        }
+
+        // No overspend condition — fall through to existing positive insights
+        return generateInsight(tracker: tracker, lastSnapshot: lastSnapshot, profile: profile)
+    }
 }

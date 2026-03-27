@@ -51,7 +51,8 @@ final class DashboardViewModel {
         insightText = InsightService.generateInsight(
             tracker: tracker,
             lastSnapshot: lastSnapshot,
-            profile: profile
+            profile: profile,
+            todayLog: todayLog
         )
     }
 
