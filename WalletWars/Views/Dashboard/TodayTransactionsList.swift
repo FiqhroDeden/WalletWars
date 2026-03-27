@@ -56,7 +56,10 @@ private extension TodayTransactionsList {
         } else {
             LazyVStack(spacing: 0) {
                 ForEach(transactions, id: \.id) { transaction in
-                    TransactionRow(transaction: transaction)
+                    Button { onViewAll?() } label: {
+                        TransactionRow(transaction: transaction)
+                    }
+                    .buttonStyle(.plain)
                     if transaction.id != transactions.last?.id {
                         Divider()
                             .padding(.leading, 44)
