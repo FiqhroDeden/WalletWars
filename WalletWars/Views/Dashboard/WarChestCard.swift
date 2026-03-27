@@ -9,6 +9,7 @@ struct WarChestCard: View {
     let amount: Double
     let state: WarChestState
     let percentRemaining: Double
+    let monthlyBudget: Double
 
     var body: some View {
         VStack(spacing: 16) {
@@ -46,6 +47,10 @@ private extension WarChestCard {
                 Text("Daily Funds")
                     .font(.custom("PlusJakartaSans-SemiBold", size: 14))
                     .foregroundStyle(Color.textMid)
+
+                Text("from $\(monthlyBudget, specifier: "%.0f")/mo budget")
+                    .font(.custom("PlusJakartaSans-Regular", size: 11))
+                    .foregroundStyle(Color.textLight)
             }
 
             Spacer()

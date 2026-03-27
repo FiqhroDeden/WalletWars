@@ -65,7 +65,8 @@ private extension DashboardView {
         WarChestCard(
             amount: viewModel?.warChestAmount ?? 0,
             state: viewModel?.warChestState ?? .healthy,
-            percentRemaining: viewModel?.todayLog?.warChestPct ?? 1.0
+            percentRemaining: viewModel?.todayLog?.warChestPct ?? 1.0,
+            monthlyBudget: viewModel?.monthlyBudget ?? 0
         )
     }
 }
