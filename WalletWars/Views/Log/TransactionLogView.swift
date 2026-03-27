@@ -16,6 +16,8 @@ struct TransactionLogView: View {
     @State private var filterCategory: Category?
     @State private var monthlyBudget: Double = 0
     @State private var highlightedTransactionID: UUID?
+    @State private var transactionToDelete: Transaction?
+    @State private var showDeletedToast = false
 
     var body: some View {
         NavigationStack {
@@ -59,8 +61,7 @@ struct TransactionLogView: View {
                     }
                 },
                 onDelete: {
-                    try? viewModel?.deleteTransaction(tx)
-                    try? viewModel?.loadTransactions()
+                    transactionToDelete = tx
                 }
             )
             .presentationDetents([.large])
@@ -73,6 +74,30 @@ struct TransactionLogView: View {
                 CategoryDetailSheet(category: cat)
                     .presentationDetents([.medium, .large])
             }
+        }
+        .alert("Delete Transaction?", isPresented: Binding(
+            get: { transactionToDelete != nil },
+            set: { if !$0 { transactionToDelete = nil } }
+        )) {
+            Button("Cancel", role: .cancel) {
+                transactionToDelete = nil
+            }
+            Button("Delete", role: .destructive) {
+                if let tx = transactionToDelete {
+                    try? viewModel?.deleteTransaction(tx)
+                    try? viewModel?.loadTransactions()
+                    transactionToDelete = nil
+                    withAnimation(.springMedium) {
+                        showDeletedToast = true
+                    }
+                }
+            }
+        } message: {
+            Text("This will permanently remove this expense.")
+        }
+        .overlay {
+            ToastView(icon: "trash.fill", message: "Transaction deleted", isShowing: $showDeletedToast)
+                .animation(.springMedium, value: showDeletedToast)
         }
         .task { setupAndLoad() }
     }
@@ -136,7 +161,7 @@ private extension TransactionLogView {
                             Label("Edit", systemImage: "pencil")
                         }
                         Button(role: .destructive) {
-                            deleteTransaction(transaction)
+                            transactionToDelete = transaction
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
@@ -249,8 +274,7 @@ private extension TransactionLogView {
     }
 
     func deleteTransaction(_ transaction: Transaction) {
-        try? viewModel?.deleteTransaction(transaction)
-        try? viewModel?.loadTransactions()
+        transactionToDelete = transaction
     }
 }
 
