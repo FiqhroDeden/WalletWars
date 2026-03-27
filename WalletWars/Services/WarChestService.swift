@@ -16,7 +16,25 @@ enum WarChestService {
         return totalDays - currentDay + 1
     }
 
-    /// Fetch total spent this month from all transactions.
+    /// Fetch total spent this month from all transactions, excluding today.
+    /// Excludes today so that dailyBudget represents today's fair share
+    /// without double-counting (today's spending is tracked separately in DailyLog.totalSpent).
+    static func totalSpentBeforeToday(context: ModelContext, referenceDate: Date = .now) throws -> Double {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: referenceDate)
+        let startOfMonth = calendar.date(from: components)!
+        let startOfToday = calendar.startOfDay(for: referenceDate)
+
+        let descriptor = FetchDescriptor<Transaction>(
+            predicate: #Predicate<Transaction> { transaction in
+                transaction.date >= startOfMonth && transaction.date < startOfToday
+            }
+        )
+        let transactions = try context.fetch(descriptor)
+        return transactions.reduce(0) { $0 + $1.amount }
+    }
+
+    /// Fetch total spent this month from all transactions (including today).
     static func totalSpentThisMonth(context: ModelContext, referenceDate: Date = .now) throws -> Double {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month], from: referenceDate)
@@ -32,17 +50,18 @@ enum WarChestService {
         return transactions.reduce(0) { $0 + $1.amount }
     }
 
-    /// Calculate today's daily budget based on monthly budget and month-to-date spending.
+    /// Calculate today's daily budget based on monthly budget and prior days' spending.
+    /// Excludes today's transactions to avoid double-counting with DailyLog.totalSpent.
     static func dailyBudgetForToday(
         monthlyBudget: Double,
         context: ModelContext,
         referenceDate: Date = .now
     ) throws -> Double {
-        let totalSpent = try totalSpentThisMonth(context: context, referenceDate: referenceDate)
+        let spentBeforeToday = try totalSpentBeforeToday(context: context, referenceDate: referenceDate)
         let remainingDays = remainingDaysInMonth(from: referenceDate)
         return FormulaService.warChest(
             monthlyBudget: monthlyBudget,
-            totalSpentThisMonth: totalSpent,
+            totalSpentThisMonth: spentBeforeToday,
             remainingDaysInMonth: remainingDays
         )
     }

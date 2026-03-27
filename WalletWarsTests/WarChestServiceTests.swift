@@ -87,6 +87,32 @@ struct WarChestServiceTests {
         #expect(total == 0.0)
     }
 
+    // MARK: - totalSpentBeforeToday
+
+    @Test func totalSpentBeforeTodayExcludesToday() throws {
+        let container = try TestHelpers.makeContainer()
+        let context = container.mainContext
+
+        let calendar = Calendar.current
+        let yesterday = calendar.date(from: DateComponents(year: 2026, month: 3, day: 14))!
+        let today = calendar.date(from: DateComponents(year: 2026, month: 3, day: 15))!
+
+        // Transaction yesterday and today
+        let t1 = Transaction(amount: 100, date: yesterday)
+        let t2 = Transaction(amount: 50, date: today)
+        context.insert(t1)
+        context.insert(t2)
+        try context.save()
+
+        // totalSpentBeforeToday should only include yesterday
+        let beforeToday = try WarChestService.totalSpentBeforeToday(context: context, referenceDate: today)
+        #expect(beforeToday == 100.0)
+
+        // totalSpentThisMonth should include both
+        let total = try WarChestService.totalSpentThisMonth(context: context, referenceDate: today)
+        #expect(total == 150.0)
+    }
+
     // MARK: - dailyBudgetForToday
 
     @Test func dailyBudgetIntegration() throws {
@@ -103,6 +129,43 @@ struct WarChestServiceTests {
             referenceDate: date
         )
         #expect(budget == 100.0) // 3100 / 31
+    }
+
+    @Test func dailyBudgetExcludesTodaySpending() throws {
+        let container = try TestHelpers.makeContainer()
+        let context = container.mainContext
+
+        let calendar = Calendar.current
+        let today = calendar.date(from: DateComponents(year: 2026, month: 3, day: 27))!
+        // 5 remaining days, budget $1500
+
+        // Spend $100 yesterday
+        let yesterday = calendar.date(from: DateComponents(year: 2026, month: 3, day: 26))!
+        let t1 = Transaction(amount: 100, date: yesterday)
+        context.insert(t1)
+
+        // Spend $50 today
+        let t2 = Transaction(amount: 50, date: today)
+        context.insert(t2)
+        try context.save()
+
+        // dailyBudget should be based on prior days only: (1500 - 100) / 5 = 280
+        let budget = try WarChestService.dailyBudgetForToday(
+            monthlyBudget: 1500,
+            context: context,
+            referenceDate: today
+        )
+        #expect(budget == 280.0)
+
+        // warChest = dailyBudget - todaySpent = 280 - 50 = 230
+        let log = DailyLog.fetchOrCreate(for: today, dailyBudget: budget, context: context)
+        log.totalSpent = 50
+        #expect(log.warChest == 230.0)
+
+        // Spend another $75 today — warChest should drop by exactly $75
+        log.totalSpent = 125
+        // dailyBudget stays 280 (today's spending excluded from formula)
+        #expect(log.warChest == 155.0) // 280 - 125 = 155, dropped by exactly 75 ✓
     }
 
     // MARK: - stateForToday
