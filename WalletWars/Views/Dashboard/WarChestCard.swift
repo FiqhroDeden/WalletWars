@@ -76,9 +76,9 @@ private extension WarChestCard {
                 .foregroundStyle(stateColor)
                 .contentTransition(.numericText())
 
-            Text("remaining")
+            Text(amount >= 0 ? "remaining" : "over budget")
                 .font(.custom("PlusJakartaSans-Regular", size: 13))
-                .foregroundStyle(Color.textLight)
+                .foregroundStyle(amount >= 0 ? Color.textLight : stateColor)
                 .padding(.leading, 4)
         }
     }
