@@ -5,6 +5,7 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
@@ -183,12 +184,33 @@ private extension SettingsView {
             VStack(spacing: 0) {
                 aboutRow(label: "Version", value: "1.0.0")
                 Divider()
-                aboutRow(label: "Build", value: "Sprint 11")
-                Divider()
-                aboutRow(label: "Made with", value: "SwiftUI + SwiftData")
+                reviewRow
             }
             .padding(12)
             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14))
+        }
+    }
+
+    var reviewRow: some View {
+        Button {
+            requestAppReview()
+        } label: {
+            HStack {
+                Image(systemName: "star.fill")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.streak)
+
+                Text("Rate WalletWars")
+                    .font(.custom("PlusJakartaSans-SemiBold", size: 14))
+                    .foregroundStyle(Color.textPrimary)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color.textLight)
+            }
+            .padding(.vertical, 10)
         }
     }
 
@@ -240,6 +262,12 @@ private extension SettingsView {
         withAnimation(.springMedium) {
             showBudgetSaved = true
         }
+    }
+
+    func requestAppReview() {
+        guard let scene = UIApplication.shared.connectedScenes
+            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else { return }
+        AppStore.requestReview(in: scene)
     }
 
     func setupAndLoad() {

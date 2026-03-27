@@ -5,12 +5,14 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct QuickCaptureSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel: QuickCaptureViewModel?
     @State private var showSuccess = false
+    @AppStorage("hasRequestedReview") private var hasRequestedReview = false
     @Query(
         filter: #Predicate<Category> { !$0.isArchived },
         sort: \Category.sortOrder
@@ -199,6 +201,17 @@ private extension QuickCaptureSheet {
                 showSuccess = true
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                // Request review once when reaching Level 3+
+                if !hasRequestedReview {
+                    let profile = PlayerProfile.fetchOrCreate(context: modelContext)
+                    if profile.currentLevel >= 3 {
+                        hasRequestedReview = true
+                        if let scene = UIApplication.shared.connectedScenes
+                            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                            AppStore.requestReview(in: scene)
+                        }
+                    }
+                }
                 vm.resetFields()
                 dismiss()
             }
