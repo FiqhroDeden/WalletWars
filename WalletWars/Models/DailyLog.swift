@@ -42,6 +42,7 @@ final class DailyLog {
             }
         )
         if let existing = try? context.fetch(descriptor).first {
+            existing.dailyBudget = dailyBudget
             return existing
         }
         let log = DailyLog(date: date, dailyBudget: dailyBudget)
