@@ -15,6 +15,8 @@ struct QuickCaptureSheet: View {
     @State private var showOverBudgetWarning = false
     @State private var showOverBudgetConfirm = false
     @State private var overBudgetAmount: Double = 0
+    @State private var showStreakBreak = false
+    @State private var brokenStreakCount: Int = 0
     @AppStorage("hasRequestedReview") private var hasRequestedReview = false
     @Query(
         filter: #Predicate<Category> { !$0.isArchived },
@@ -40,6 +42,7 @@ struct QuickCaptureSheet: View {
             .toolbar { cancelToolbar }
             .overlay { successOverlay }
             .overlay(alignment: .top) { overBudgetBanner }
+            .overlay { StreakBreakOverlay(streakCount: brokenStreakCount, isShowing: $showStreakBreak) }
             .confirmationDialog(
                 "You're already $\(Int(overBudgetAmount)) over budget today.",
                 isPresented: $showOverBudgetConfirm,
@@ -230,7 +233,14 @@ private extension QuickCaptureSheet {
     func performSave() {
         guard let vm = viewModel else { return }
         do {
+            vm.capturePreSaveState()
             try vm.saveTransaction()
+
+            // Check if budget streak broke
+            if vm.didBreakBudgetStreak() {
+                brokenStreakCount = vm.budgetStreakBeforeSave
+            }
+
             withAnimation(.springMedium) {
                 showSuccess = true
             }
@@ -242,6 +252,22 @@ private extension QuickCaptureSheet {
             }()
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                // Show streak break overlay if applicable
+                if brokenStreakCount > 0 {
+                    withAnimation(.springMedium) {
+                        showStreakBreak = true
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        withAnimation(.springMedium) {
+                            showStreakBreak = false
+                        }
+                        brokenStreakCount = 0
+                        vm.resetFields()
+                        dismiss()
+                    }
+                    return
+                }
+
                 vm.resetFields()
                 dismiss()
 

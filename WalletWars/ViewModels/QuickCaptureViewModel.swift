@@ -79,6 +79,10 @@ final class QuickCaptureViewModel {
         profile.totalTransactions += 1
         XPService.awardXP(XP.logTransaction, to: profile)
         StreakService.updateLoggingStreak(profile: profile)
+        // Check for streak destroyer shame mark before streak might reset
+        if !dailyLog.isUnderBudget {
+            try? ShameMarkService.checkStreakDestroyer(profile: profile, context: context)
+        }
         if dailyLog.isUnderBudget {
             StreakService.updateBudgetStreak(profile: profile)
         }
@@ -100,6 +104,21 @@ final class QuickCaptureViewModel {
         let projected = todayLog.totalSpent + amount
         let excess = projected - dailyBudget
         return excess > 0 ? excess : nil
+    }
+
+    /// The budget streak count BEFORE this transaction.
+    var budgetStreakBeforeSave: Int = 0
+
+    /// Capture pre-save state for streak break detection.
+    func capturePreSaveState() {
+        let profile = PlayerProfile.fetchOrCreate(context: context)
+        budgetStreakBeforeSave = profile.budgetStreakCount
+    }
+
+    /// Check if the save broke the budget streak.
+    func didBreakBudgetStreak() -> Bool {
+        let profile = PlayerProfile.fetchOrCreate(context: context)
+        return budgetStreakBeforeSave > 0 && profile.budgetStreakCount == 0
     }
 
     /// Returns true if today's spending is already over the daily budget.
