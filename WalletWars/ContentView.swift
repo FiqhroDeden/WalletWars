@@ -45,7 +45,7 @@ struct ContentView: View {
     private var mainTabView: some View {
         TabView(selection: $selectedTab) {
             Tab("Dashboard", systemImage: "chart.bar.fill", value: 0) {
-                DashboardView()
+                DashboardView(onSwitchToLog: { selectedTab = 1 })
             }
 
             Tab("Log", systemImage: "list.bullet.rectangle.fill", value: 1) {
