@@ -11,6 +11,7 @@ struct TransactionLogView: View {
     @State private var viewModel: TransactionLogViewModel?
     @State private var showFilter = false
     @State private var editingTransaction: Transaction?
+    @State private var selectedCategory: Category?
     @State private var filterPeriod: FilterPeriod = .thisMonth
     @State private var filterCategory: Category?
     @State private var monthlyBudget: Double = 0
@@ -21,9 +22,7 @@ struct TransactionLogView: View {
                 LazyVStack(spacing: 16) {
                     summaryCard
                     CategoryBudgetView { category in
-                        filterCategory = category
-                        filterPeriod = .thisMonth
-                        applyFilters()
+                        selectedCategory = category
                     }
                     transactionSections
                 }
@@ -56,6 +55,15 @@ struct TransactionLogView: View {
                 }
             )
             .presentationDetents([.large])
+        }
+        .sheet(isPresented: Binding(
+            get: { selectedCategory != nil },
+            set: { if !$0 { selectedCategory = nil } }
+        )) {
+            if let cat = selectedCategory {
+                CategoryDetailSheet(category: cat)
+                    .presentationDetents([.medium, .large])
+            }
         }
         .task { setupAndLoad() }
     }

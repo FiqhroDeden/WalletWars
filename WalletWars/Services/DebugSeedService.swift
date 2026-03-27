@@ -21,6 +21,7 @@ enum DebugSeedService {
         let categories = (try? context.fetch(FetchDescriptor<Category>())) ?? []
 
         seedProfile(profile)
+        seedCategoryBudgets(categories)
         seedTransactions(context: context, categories: categories)
         seedDailyLogs(context: context, profile: profile)
         seedCurrentWeekTracker(context: context, categories: categories)
@@ -56,6 +57,22 @@ enum DebugSeedService {
         profile.duelWinStreakBest = 1
         profile.currencyCode = "USD"
         profile.hasCompletedOnboarding = true
+    }
+
+    // MARK: - Category Budgets
+
+    private static func seedCategoryBudgets(_ categories: [Category]) {
+        // Set budgets for some categories (index matches default seed order)
+        let budgets: [Int: Double] = [
+            0: 1500, // Food & Drink
+            1: 800,  // Transport
+            2: 500,  // Shopping
+            4: 1200, // Bills
+        ]
+        for (index, budget) in budgets {
+            guard index < categories.count else { continue }
+            categories[index].budgetAmount = budget
+        }
     }
 
     // MARK: - Transactions
