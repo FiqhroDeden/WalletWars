@@ -102,6 +102,10 @@ final class TransactionLogViewModel {
 
         // Delete
         context.delete(transaction)
+
+        // Re-evaluate impulse spender penalty after deletion
+        try ShameMarkService.reverseImpulseSpenderIfNeeded(context: context)
+
         try context.save()
     }
 

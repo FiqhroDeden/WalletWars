@@ -200,6 +200,7 @@ enum ShameMarkType: String, Codable, CaseIterable {
     case budgetBreaker
     case impulseSpender
     case streakDestroyer
+    case bigSpender
 
     var title: String {
         switch self {
@@ -207,6 +208,7 @@ enum ShameMarkType: String, Codable, CaseIterable {
         case .budgetBreaker:   "Budget Breaker"
         case .impulseSpender:  "Impulse Spender"
         case .streakDestroyer: "Streak Destroyer"
+        case .bigSpender:      "Big Spender"
         }
     }
 
@@ -216,6 +218,7 @@ enum ShameMarkType: String, Codable, CaseIterable {
         case .budgetBreaker:   "exclamationmark.triangle.fill"
         case .impulseSpender:  "flame.fill"
         case .streakDestroyer: "bolt.slash.fill"
+        case .bigSpender:      "creditcard.trianglebadge.exclamationmark.fill"
         }
     }
 
@@ -225,6 +228,7 @@ enum ShameMarkType: String, Codable, CaseIterable {
         case .budgetBreaker:   7
         case .impulseSpender:  3
         case .streakDestroyer: 7
+        case .bigSpender:      3
         }
     }
 
@@ -234,6 +238,7 @@ enum ShameMarkType: String, Codable, CaseIterable {
         case .budgetBreaker:   75
         case .impulseSpender:  50
         case .streakDestroyer: 50
+        case .bigSpender:      50
         }
     }
 
@@ -241,8 +246,9 @@ enum ShameMarkType: String, Codable, CaseIterable {
         switch self {
         case .shieldShattered: "Stay under daily budget for \(targetProgress) days"
         case .budgetBreaker:   "Stay under daily budget for \(targetProgress) days"
-        case .impulseSpender:  "Avoid this category for \(targetProgress) days"
+        case .impulseSpender:  "Keep this category under 2 transactions/day for \(targetProgress) days"
         case .streakDestroyer: "Rebuild a \(targetProgress)-day budget streak"
+        case .bigSpender:      "Keep all transactions under 30% of daily budget for \(targetProgress) days"
         }
     }
 }

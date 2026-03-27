@@ -150,6 +150,20 @@
 - [x] Update PRD with behavioral gamification sections
 - [x] Tests: ShameMarkService conditions + clearing logic (5 tests)
 
+## V1.0 Behavioral Gamification Bug Fixes
+
+- [x] ShameMarkCard: show category name for Impulse Spender penalty
+- [x] Streak break overlay: tap-to-dismiss instead of 1.5s auto-dismiss
+- [x] Overspend stats: fix daysOverBudgetCount increment (max→+=1 on transition)
+- [x] Sharper insight messages: verified working (Priority 1 overspend message shows)
+- [x] Dashboard streak banner: verified correct (log streak is separate from budget streak)
+- [x] Impulse Spender: exempt essential categories (Food, Transport, Bills, Health, Education)
+- [x] Impulse Spender: update to current worst discretionary category
+- [x] Impulse Spender: softer clearing condition (under 2 tx/day, not zero)
+- [x] Impulse Spender: reverse penalty on transaction delete if condition no longer met
+- [x] Big Spender penalty: new shame mark for single tx > 50% of daily budget
+- [x] Big Spender: cleared by 3 days with all tx under 30% of daily budget
+
 ---
 
 **V2+: Monetization (WalletWars Plus) — post-launch**

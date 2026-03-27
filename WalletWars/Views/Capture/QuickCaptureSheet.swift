@@ -54,6 +54,13 @@ struct QuickCaptureSheet: View {
                 Text("Logging this will make it harder to recover your shield streak.")
             }
             .onAppear { setupViewModel() }
+            .onChange(of: showStreakBreak) { _, newValue in
+                if !newValue && brokenStreakCount > 0 {
+                    brokenStreakCount = 0
+                    viewModel?.resetFields()
+                    dismiss()
+                }
+            }
         }
     }
 
@@ -252,18 +259,10 @@ private extension QuickCaptureSheet {
             }()
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                // Show streak break overlay if applicable
+                // Show streak break overlay if applicable — user taps to dismiss
                 if brokenStreakCount > 0 {
                     withAnimation(.springMedium) {
                         showStreakBreak = true
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        withAnimation(.springMedium) {
-                            showStreakBreak = false
-                        }
-                        brokenStreakCount = 0
-                        vm.resetFields()
-                        dismiss()
                     }
                     return
                 }

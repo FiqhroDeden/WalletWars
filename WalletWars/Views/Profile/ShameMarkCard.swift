@@ -21,7 +21,7 @@ struct ShameMarkCard: View {
                         .font(.custom("PlusJakartaSans-Bold", size: 14))
                         .foregroundStyle(Color.rival)
 
-                    Text(type.clearDescription)
+                    Text(clearDescription(for: type))
                         .font(.custom("PlusJakartaSans-Regular", size: 12))
                         .foregroundStyle(Color.textMid)
 
@@ -35,5 +35,15 @@ struct ShameMarkCard: View {
             }
             .padding(12)
         }
+    }
+
+    private func clearDescription(for type: ShameMarkType) -> String {
+        if type == .impulseSpender, let category = mark.metadata {
+            return "Keep \(category) under 2 transactions/day for \(type.targetProgress) days"
+        }
+        if type == .bigSpender, let category = mark.metadata {
+            return "\(type.clearDescription) (triggered by \(category))"
+        }
+        return type.clearDescription
     }
 }

@@ -87,14 +87,24 @@ final class QuickCaptureViewModel {
             StreakService.updateBudgetStreak(profile: profile)
         } else {
             StreakService.breakBudgetStreak(profile: profile)
-            // Update overspend stats in real-time
+            // Update overspend stats — only increment on under→over transition
             let overspend = dailyLog.totalSpent - dailyLog.dailyBudget
             if overspend > profile.worstDailyOverspend {
                 profile.worstDailyOverspend = overspend
             }
-            profile.daysOverBudgetCount = max(profile.daysOverBudgetCount, 1)
+            if wasUnderBudgetBeforeSave {
+                profile.daysOverBudgetCount += 1
+            }
         }
         BadgeService.checkAndUnlock(profile: profile)
+
+        // Big Spender: single transaction > 50% of daily budget
+        try? ShameMarkService.checkBigSpender(
+            amount: amount,
+            dailyBudget: dailyLog.dailyBudget,
+            categoryName: selectedCategory?.name,
+            context: context
+        )
 
         try context.save()
         return transaction
@@ -116,11 +126,19 @@ final class QuickCaptureViewModel {
 
     /// The budget streak count BEFORE this transaction.
     var budgetStreakBeforeSave: Int = 0
+    /// Whether today was under budget before this transaction.
+    var wasUnderBudgetBeforeSave: Bool = true
 
-    /// Capture pre-save state for streak break detection.
+    /// Capture pre-save state for streak break and overspend detection.
     func capturePreSaveState() {
         let profile = PlayerProfile.fetchOrCreate(context: context)
         budgetStreakBeforeSave = profile.budgetStreakCount
+        let dailyBudget = (try? WarChestService.dailyBudgetForToday(
+            monthlyBudget: profile.monthlyBudget,
+            context: context
+        )) ?? 0
+        let todayLog = DailyLog.fetchOrCreate(for: .now, dailyBudget: dailyBudget, context: context)
+        wasUnderBudgetBeforeSave = todayLog.isUnderBudget
     }
 
     /// Check if the save broke the budget streak.
