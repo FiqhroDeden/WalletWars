@@ -18,6 +18,9 @@ struct ProfileView: View {
                     streakSection
                     duelRecordSection
                     badgeSection
+                    if !(viewModel?.activeShameMarks.isEmpty ?? true) {
+                        penaltiesSection
+                    }
                     statsSection
                 }
                 .padding(.horizontal, 16)
@@ -136,6 +139,33 @@ private extension ProfileView {
     }
 }
 
+// MARK: - Penalties
+
+private extension ProfileView {
+    var penaltiesSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("ACTIVE PENALTIES")
+                .font(.custom("PlusJakartaSans-Bold", size: 10))
+                .tracking(2)
+                .foregroundStyle(Color.rival)
+
+            VStack(spacing: 0) {
+                ForEach(viewModel?.activeShameMarks ?? [], id: \.id) { mark in
+                    ShameMarkCard(mark: mark)
+                    if mark.id != viewModel?.activeShameMarks.last?.id {
+                        Divider().padding(.leading, 48)
+                    }
+                }
+            }
+            .background(Color.card, in: RoundedRectangle(cornerRadius: 14))
+            .overlay {
+                RoundedRectangle(cornerRadius: 14)
+                    .strokeBorder(Color.rival.opacity(0.2), lineWidth: 1)
+            }
+        }
+    }
+}
+
 // MARK: - Stats
 
 private extension ProfileView {
@@ -144,7 +174,9 @@ private extension ProfileView {
             totalTransactions: viewModel?.totalTransactions ?? 0,
             questsCompleted: viewModel?.questsCompleted ?? 0,
             duelsWon: viewModel?.duelsWon ?? 0,
-            duelsPlayed: viewModel?.duelsPlayed ?? 0
+            duelsPlayed: viewModel?.duelsPlayed ?? 0,
+            daysOverBudget: viewModel?.daysOverBudget ?? 0,
+            worstOverspend: viewModel?.worstOverspend ?? 0
         )
     }
 }

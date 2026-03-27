@@ -28,6 +28,7 @@ final class ProfileViewModel {
         totalXP = p.totalXP
         currentLevel = p.currentLevel
         levelTitle = FormulaService.titleFor(level: p.currentLevel)
+        activeShameMarks = (try? ShameMarkService.fetchActiveMarks(context: context)) ?? []
     }
 
     var totalTransactions: Int { profile?.totalTransactions ?? 0 }
@@ -39,4 +40,7 @@ final class ProfileViewModel {
     var budgetStreakCurrent: Int { profile?.budgetStreakCount ?? 0 }
     var budgetStreakBest: Int { profile?.budgetStreakBest ?? 0 }
     var unlockedBadges: [String] { profile?.unlockedBadges ?? [] }
+    var daysOverBudget: Int { profile?.daysOverBudgetCount ?? 0 }
+    var worstOverspend: Double { profile?.worstDailyOverspend ?? 0 }
+    var activeShameMarks: [ShameMark] = []
 }
