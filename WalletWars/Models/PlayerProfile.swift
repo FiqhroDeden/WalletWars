@@ -37,6 +37,8 @@ final class PlayerProfile {
     var totalTransactions: Int
     var duelWinStreak: Int
     var duelWinStreakBest: Int
+    var daysOverBudgetCount: Int
+    var worstDailyOverspend: Double
 
     // Settings
     var currencyCode: String
@@ -64,6 +66,8 @@ final class PlayerProfile {
         self.totalTransactions = 0
         self.duelWinStreak = 0
         self.duelWinStreakBest = 0
+        self.daysOverBudgetCount = 0
+        self.worstDailyOverspend = 0
         self.currencyCode = "IDR"
         self.hasCompletedOnboarding = false
         self.createdAt = .now
