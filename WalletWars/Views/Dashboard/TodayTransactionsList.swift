@@ -7,6 +7,7 @@ import SwiftUI
 
 struct TodayTransactionsList: View {
     let transactions: [Transaction]
+    var onViewAll: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -33,10 +34,14 @@ private extension TodayTransactionsList {
 
             Spacer()
 
-            Text("VIEW ALL")
-                .font(.custom("PlusJakartaSans-Bold", size: 10))
-                .tracking(1)
-                .foregroundStyle(Color.hero)
+            Button {
+                onViewAll?()
+            } label: {
+                Text("VIEW ALL")
+                    .font(.custom("PlusJakartaSans-Bold", size: 10))
+                    .tracking(1)
+                    .foregroundStyle(Color.hero)
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel: DashboardViewModel?
     @State private var showCapture = false
+    @State private var navigateToLog = false
 
     var body: some View {
         NavigationStack {
@@ -85,8 +86,20 @@ private extension DashboardView {
 private extension DashboardView {
     var transactionsSection: some View {
         TodayTransactionsList(
-            transactions: viewModel?.todayTransactions ?? []
+            transactions: viewModel?.todayTransactions ?? [],
+            onViewAll: {
+                // Navigate to full transaction log
+                navigateToLog = true
+            }
         )
+        .background {
+            NavigationLink(isActive: $navigateToLog) {
+                TransactionLogView()
+            } label: {
+                EmptyView()
+            }
+            .hidden()
+        }
     }
 }
 

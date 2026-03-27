@@ -7,7 +7,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Transaction {
+final class Transaction: Identifiable {
     var id: UUID
     var amount: Double
     var note: String?
