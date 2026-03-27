@@ -23,6 +23,7 @@ struct DashboardView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
                         SettingsView()
+                            .onDisappear { refreshDashboard() }
                     } label: {
                         Image(systemName: "gearshape.fill")
                             .foregroundStyle(Color.textMid)
