@@ -138,17 +138,17 @@
 
 ## V1.0 Behavioral Gamification (penalties + prevention)
 
-- [ ] ShameMark model + ShameMarkType enum
-- [ ] PlayerProfile: add daysOverBudgetCount, worstDailyOverspend fields
-- [ ] ShameMarkService (check/apply/clear logic + XP reward on clear)
-- [ ] Overspend warning in QuickCapture (escalating: banner → confirmation)
-- [ ] Budget streak break overlay (red "Shield Streak Lost" after save)
-- [ ] Sharper overspend-aware insight messages in InsightService
-- [ ] Overspend stats in Profile (days over budget, worst overspend)
-- [ ] Shame marks display in Profile (Active Penalties section + progress bars)
-- [ ] Shame mark cleared toast + XP award
-- [ ] Update PRD with behavioral gamification sections
-- [ ] Tests: ShameMarkService conditions + clearing logic
+- [x] ShameMark model + ShameMarkType enum
+- [x] PlayerProfile: add daysOverBudgetCount, worstDailyOverspend fields
+- [x] ShameMarkService (check/apply/clear logic + XP reward on clear)
+- [x] Overspend warning in QuickCapture (escalating: banner → confirmation)
+- [x] Budget streak break overlay (red "Shield Streak Lost" after save)
+- [x] Sharper overspend-aware insight messages in InsightService
+- [x] Overspend stats in Profile (days over budget, worst overspend)
+- [x] Shame marks display in Profile (Active Penalties section + progress bars)
+- [x] Shame mark cleared toast + XP award (via ShameMarkService.updateProgress)
+- [x] Update PRD with behavioral gamification sections
+- [x] Tests: ShameMarkService conditions + clearing logic (5 tests)
 
 ---
 
