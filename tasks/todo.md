@@ -136,6 +136,20 @@
 - [x] Log: green highlight animation on edited transaction row
 - [x] Log: delete confirmation alert + success toast
 
+## V1.0 Behavioral Gamification (penalties + prevention)
+
+- [ ] ShameMark model + ShameMarkType enum
+- [ ] PlayerProfile: add daysOverBudgetCount, worstDailyOverspend fields
+- [ ] ShameMarkService (check/apply/clear logic + XP reward on clear)
+- [ ] Overspend warning in QuickCapture (escalating: banner → confirmation)
+- [ ] Budget streak break overlay (red "Shield Streak Lost" after save)
+- [ ] Sharper overspend-aware insight messages in InsightService
+- [ ] Overspend stats in Profile (days over budget, worst overspend)
+- [ ] Shame marks display in Profile (Active Penalties section + progress bars)
+- [ ] Shame mark cleared toast + XP award
+- [ ] Update PRD with behavioral gamification sections
+- [ ] Tests: ShameMarkService conditions + clearing logic
+
 ---
 
 **V2+: Monetization (WalletWars Plus) — post-launch**

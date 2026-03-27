@@ -321,6 +321,39 @@ static func levelFor(xp: Int) -> Int {
 
 ---
 
+### 6.6.4 Behavioral Penalties (Shame Marks)
+
+**Goal:** Temporary penalty marks earned through bad financial behavior that can be redeemed through good behavior. Creates a recovery quest loop — bad behavior isn't just punished, it creates a mission to recover.
+
+**Shame Mark Definitions:**
+
+| Mark ID | Name | Earned When | Cleared By | Clear XP |
+|---------|------|-------------|------------|----------|
+| `shieldShattered` | Shield Shattered | Over budget 3 consecutive days | 5 consecutive days under budget | +50 |
+| `budgetBreaker` | Budget Breaker | Monthly spend > 100% of budget | 7 consecutive days under budget | +75 |
+| `impulseSpender` | Impulse Spender | 3+ transactions in worst category in one day | 3 days with 0 transactions in that category | +50 |
+| `streakDestroyer` | Streak Destroyer | Break a budget streak of 7+ days | Rebuild a 7-day budget streak | +50 |
+
+**Rules:**
+- Displayed in Profile under "Active Penalties" section (Rival Red theme)
+- Each shows progress bar toward clearing (e.g., "3/5 days under budget")
+- When cleared: victory animation + "Mark Cleared!" + bonus XP
+- Multiple marks can stack
+- Philosophy: bad behavior creates a quest to recover, not a reason to quit
+
+### 6.6.5 Overspend Prevention (Escalating Warnings)
+
+**Goal:** Add friction before overspending to help users exercise self-control.
+
+**In QuickCapture, when transaction would exceed daily budget:**
+- **First overspend of the day:** Amber warning banner: "This will break your shield for today." User can still save immediately.
+- **Second+ overspend of the day:** Confirmation dialog: "You're already $X over budget today. Spend anyway?" Forces deliberate choice.
+
+**Budget Streak Break Visibility:**
+- When a transaction breaks the budget streak, show a red "Shield Streak Lost" overlay after save success, displaying the streak count that was just broken.
+
+---
+
 ### 6.7 Insights (Passive Intelligence)
 
 **Goal:** Brief insights that appear naturally, not an overwhelming analytics dashboard.
@@ -331,10 +364,17 @@ static func levelFor(xp: Int) -> Int {
 3. **Trend Observation** — "Transport spending has dropped 3 weeks in a row. Nice trend!"
 4. **Smart Suggestion** — "You tend to go over budget on Shopping. Try reducing by 100k next week?"
 
+**Overspend-Aware Insights (Priority):**
+5. **Daily Overspend** — "You spent $X more than your daily shield allows. That's tomorrow's budget eaten today."
+6. **Monthly Warning** — "You've burned through 80% of your monthly budget with X days left. The walls are closing in."
+7. **Streak Break** — "Your 5-day budget streak just shattered. Building it back starts tomorrow."
+8. **Penalty Reminder** — "You have 2 active penalty marks. Good behavior clears them."
+
 **Rules:**
 - Max 2 insights per day (not spammy)
-- Tone: supportive coach, not a financial advisor
-- Never judgmental: "Tough week" not "You overspent again"
+- Overspend/warning insights take priority over positive insights
+- Tone: concerned commander, not judgmental parent. Military theme. Factual but emotionally weighted.
+- When over budget, user should NOT see cheerful messages
 
 ---
 
