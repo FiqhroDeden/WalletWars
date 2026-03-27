@@ -21,10 +21,14 @@ struct ShameMarkCard: View {
                         .font(.custom("PlusJakartaSans-Bold", size: 14))
                         .foregroundStyle(Color.rival)
 
+                    Text(type.clearDescription)
+                        .font(.custom("PlusJakartaSans-Regular", size: 12))
+                        .foregroundStyle(Color.textMid)
+
                     ProgressView(value: Double(mark.progress), total: Double(mark.targetProgress))
                         .tint(Color.rival)
 
-                    Text("\(mark.progress)/\(mark.targetProgress) to clear")
+                    Text("\(mark.progress)/\(mark.targetProgress)")
                         .font(.custom("PlusJakartaSans-Regular", size: 11))
                         .foregroundStyle(Color.textLight)
                 }

@@ -236,6 +236,15 @@ enum ShameMarkType: String, Codable, CaseIterable {
         case .streakDestroyer: 50
         }
     }
+
+    var clearDescription: String {
+        switch self {
+        case .shieldShattered: "Stay under daily budget for \(targetProgress) days"
+        case .budgetBreaker:   "Stay under daily budget for \(targetProgress) days"
+        case .impulseSpender:  "Avoid this category for \(targetProgress) days"
+        case .streakDestroyer: "Rebuild a \(targetProgress)-day budget streak"
+        }
+    }
 }
 
 // MARK: - XP Constants

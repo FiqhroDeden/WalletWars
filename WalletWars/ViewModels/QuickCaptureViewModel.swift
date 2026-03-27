@@ -85,6 +85,14 @@ final class QuickCaptureViewModel {
         }
         if dailyLog.isUnderBudget {
             StreakService.updateBudgetStreak(profile: profile)
+        } else {
+            StreakService.breakBudgetStreak(profile: profile)
+            // Update overspend stats in real-time
+            let overspend = dailyLog.totalSpent - dailyLog.dailyBudget
+            if overspend > profile.worstDailyOverspend {
+                profile.worstDailyOverspend = overspend
+            }
+            profile.daysOverBudgetCount = max(profile.daysOverBudgetCount, 1)
         }
         BadgeService.checkAndUnlock(profile: profile)
 

@@ -82,14 +82,16 @@ enum InsightService {
             }
         }
 
-        // Priority 2: Monthly budget warning
-        if profile.monthlyBudget > 0 {
+        // Priority 2: Monthly budget warning (use dailyBudget * remainingDays to estimate monthly remaining)
+        if profile.monthlyBudget > 0, let log = todayLog {
             let remainingDays = WarChestService.remainingDaysInMonth()
-            let monthSpent = tracker.totalSpent
-            let monthPct = monthSpent / profile.monthlyBudget
+            // Approximate month spent: budget - (dailyBudget * remainingDays) + today's overspend
+            let monthRemaining = log.dailyBudget * Double(remainingDays) - log.totalSpent
+            let monthSpentApprox = profile.monthlyBudget - monthRemaining
+            let monthPct = monthSpentApprox / profile.monthlyBudget
 
             if monthPct > 1.0 {
-                return "Monthly budget exceeded. You're \(Int((monthPct - 1.0) * 100))% over. Every transaction digs deeper."
+                return "Monthly budget exceeded by \(Int((monthPct - 1.0) * 100))%. Every transaction digs deeper."
             }
             if monthPct > 0.8 {
                 return "You've burned through \(Int(monthPct * 100))% of your monthly budget with \(remainingDays) days left. The walls are closing in."
