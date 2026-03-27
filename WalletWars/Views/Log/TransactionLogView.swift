@@ -97,8 +97,7 @@ private extension TransactionLogView {
             VStack(spacing: 0) {
                 ForEach(group.transactions, id: \.id) { transaction in
                     Button {
-                        selectedTransaction = transaction
-                        showEdit = true
+                        editingTransaction = transaction
                     } label: {
                         LogTransactionRow(transaction: transaction)
                     }

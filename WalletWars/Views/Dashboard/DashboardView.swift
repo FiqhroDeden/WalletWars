@@ -88,17 +88,11 @@ private extension DashboardView {
         TodayTransactionsList(
             transactions: viewModel?.todayTransactions ?? [],
             onViewAll: {
-                // Navigate to full transaction log
                 navigateToLog = true
             }
         )
-        .background {
-            NavigationLink(isActive: $navigateToLog) {
-                TransactionLogView()
-            } label: {
-                EmptyView()
-            }
-            .hidden()
+        .navigationDestination(isPresented: $navigateToLog) {
+            TransactionLogView()
         }
     }
 }
