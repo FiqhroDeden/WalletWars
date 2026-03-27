@@ -118,4 +118,36 @@ struct WarChestServiceTests {
         log.totalSpent = 150 // over budget
         #expect(WarChestService.stateForToday(dailyLog: log) == .broken)
     }
+
+    // MARK: - DailyLog budget refresh
+
+    @Test func dailyLogUpdatesbudgetOnRefetch() throws {
+        let container = try TestHelpers.makeContainer()
+        let context = container.mainContext
+
+        let calendar = Calendar.current
+        let date = calendar.date(from: DateComponents(year: 2026, month: 3, day: 27))!
+        // 5 remaining days, budget $1000, no spending yet → $200/day
+        let log1 = DailyLog.fetchOrCreate(for: date, dailyBudget: 200, context: context)
+        #expect(log1.dailyBudget == 200)
+        #expect(log1.warChest == 200)
+
+        // Simulate spending $100
+        log1.totalSpent = 100
+        #expect(log1.warChest == 100) // 200 - 100
+
+        // After spending, the monthly remaining changed so dailyBudget recalculates to 180
+        // fetchOrCreate should UPDATE the dailyBudget on the existing log
+        let log2 = DailyLog.fetchOrCreate(for: date, dailyBudget: 180, context: context)
+        #expect(log2.id == log1.id) // same log
+        #expect(log2.dailyBudget == 180) // updated, not stale 200
+        #expect(log2.warChest == 80) // 180 - 100, NOT 200 - 100
+
+        // Simulate spending another $50
+        log2.totalSpent = 150
+        // Recalculate: dailyBudget drops to 170
+        let log3 = DailyLog.fetchOrCreate(for: date, dailyBudget: 170, context: context)
+        #expect(log3.dailyBudget == 170)
+        #expect(log3.warChest == 20) // 170 - 150 — still positive, always decreasing
+    }
 }
