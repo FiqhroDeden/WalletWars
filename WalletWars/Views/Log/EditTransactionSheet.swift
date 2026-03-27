@@ -44,6 +44,7 @@ struct EditTransactionSheet: View {
                 .padding(20)
             }
             .background(Color.surface)
+            .onTapGesture { UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil) }
             .navigationTitle("Edit Transaction")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { cancelToolbar }
