@@ -104,6 +104,7 @@ private struct CategoryBudgetRow: View {
             }
         }
         .padding(.vertical, 10)
+    .contentShape(Rectangle())
     }
 
     private var icon: some View {

@@ -267,7 +267,6 @@ private extension CategoryDetailSheet {
         dailySpending = daily
 
         // Week total
-        let weekStart = calendar.date(byAdding: .day, value: -6, to: today)!
         weekTotal = daily.reduce(0) { $0 + $1.amount }
 
         // Month total
