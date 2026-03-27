@@ -119,10 +119,17 @@
 - [x] NotificationService (daily reminder, streak warning, cancel all)
 - [x] Dashboard gear icon → Settings navigation
 - [x] App icon generated (Light/Dark/Tinted via Swift script)
-- [ ] Dark mode verification (manual testing needed)
-- [ ] Accessibility polish (manual VoiceOver testing needed)
+- [x] Dark mode verification
+- [x] Accessibility polish
 
 ---
 
-**V1 Total: Sprints 0-11 | Target: 22-28 days**
+**V1 Feature-Complete: Sprints 0-11 — All done as of 2026-03-27**
+
+## V1.0 Improvements (pre-release polish)
+
+- [ ] (add improvements here as identified)
+
+---
+
 **V2+: Monetization (WalletWars Plus) — post-launch**
