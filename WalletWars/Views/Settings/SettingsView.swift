@@ -11,6 +11,8 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: SettingsViewModel?
     @State private var showAddCategory = false
+    @State private var editingBudget: String = ""
+    @State private var showBudgetSaved = false
 
     var body: some View {
         ScrollView {
@@ -29,6 +31,10 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showAddCategory) { addCategorySheet }
         .task { setupAndLoad() }
+        .overlay {
+            ToastView(icon: "checkmark.circle.fill", message: "Budget updated", isShowing: $showBudgetSaved)
+                .animation(.springMedium, value: showBudgetSaved)
+        }
     }
 }
 
@@ -44,28 +50,29 @@ private extension SettingsView {
                     .font(.custom("PlusJakartaSans-Bold", size: 20))
                     .foregroundStyle(Color.textMid)
 
-                TextField("0", text: budgetBinding)
+                TextField("0", text: $editingBudget)
                     .font(.custom("PlusJakartaSans-ExtraBold", size: 28))
                     .foregroundStyle(Color.hero)
                     .keyboardType(.decimalPad)
+
+                if budgetHasChanged {
+                    Button {
+                        saveBudget()
+                    } label: {
+                        Text("Save")
+                            .font(.custom("PlusJakartaSans-Bold", size: 14))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                            .background(Color.hero, in: Capsule())
+                    }
+                    .transition(.scale.combined(with: .opacity))
+                }
             }
             .padding(16)
             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14))
+            .animation(.springFast, value: budgetHasChanged)
         }
-    }
-
-    var budgetBinding: Binding<String> {
-        Binding(
-            get: {
-                let budget = viewModel?.monthlyBudget ?? 0
-                return budget > 0 ? String(format: "%.0f", budget) : ""
-            },
-            set: { newValue in
-                if let value = Double(newValue) {
-                    viewModel?.updateBudget(value)
-                }
-            }
-        )
     }
 }
 
@@ -220,11 +227,28 @@ private extension SettingsView {
             .foregroundStyle(Color.textLight)
     }
 
+    var budgetHasChanged: Bool {
+        guard let current = viewModel?.monthlyBudget else { return false }
+        let currentStr = current > 0 ? String(format: "%.0f", current) : ""
+        return editingBudget != currentStr
+    }
+
+    func saveBudget() {
+        guard let value = Double(editingBudget) else { return }
+        viewModel?.updateBudget(value)
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        withAnimation(.springMedium) {
+            showBudgetSaved = true
+        }
+    }
+
     func setupAndLoad() {
         if viewModel == nil {
             viewModel = SettingsViewModel(context: modelContext)
         }
         try? viewModel?.loadSettings()
+        let budget = viewModel?.monthlyBudget ?? 0
+        editingBudget = budget > 0 ? String(format: "%.0f", budget) : ""
     }
 }
 
