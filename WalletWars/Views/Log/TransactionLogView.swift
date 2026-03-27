@@ -37,69 +37,86 @@ struct TransactionLogView: View {
             .navigationTitle("Transactions")
             .toolbar { filterToolbar }
         }
-        .sheet(isPresented: $showFilter) {
-            FilterSheet(
-                selectedPeriod: $filterPeriod,
-                selectedCategory: $filterCategory,
-                onApply: { applyFilters() }
-            )
-            .presentationDetents([.medium])
-        }
-        .sheet(item: $editingTransaction) { tx in
-            EditTransactionSheet(
-                transaction: tx,
-                onSave: { amount, note, cat, clearCat in
-                    try? viewModel?.updateTransaction(tx, newAmount: amount, newNote: note, newCategory: cat, clearCategory: clearCat)
-                    try? viewModel?.loadTransactions()
-                    withAnimation(.springMedium) {
-                        highlightedTransactionID = tx.id
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                        withAnimation(.springGentle) {
-                            highlightedTransactionID = nil
-                        }
-                    }
-                },
-                onDelete: {
-                    transactionToDelete = tx
-                }
-            )
-            .presentationDetents([.large])
-        }
-        .sheet(isPresented: Binding(
-            get: { selectedCategory != nil },
-            set: { if !$0 { selectedCategory = nil } }
-        )) {
-            if let cat = selectedCategory {
-                CategoryDetailSheet(category: cat)
-                    .presentationDetents([.medium, .large])
-            }
-        }
-        .alert("Delete Transaction?", isPresented: Binding(
-            get: { transactionToDelete != nil },
-            set: { if !$0 { transactionToDelete = nil } }
-        )) {
-            Button("Cancel", role: .cancel) {
-                transactionToDelete = nil
-            }
-            Button("Delete", role: .destructive) {
-                if let tx = transactionToDelete {
-                    try? viewModel?.deleteTransaction(tx)
-                    try? viewModel?.loadTransactions()
-                    transactionToDelete = nil
-                    withAnimation(.springMedium) {
-                        showDeletedToast = true
-                    }
-                }
-            }
+        .sheet(isPresented: $showFilter) { filterSheet }
+        .sheet(item: $editingTransaction) { tx in editSheet(for: tx) }
+        .sheet(isPresented: categorySheetBinding) { categorySheet }
+        .alert("Delete Transaction?", isPresented: deleteAlertBinding) {
+            deleteAlertActions
         } message: {
             Text("This will permanently remove this expense.")
         }
-        .overlay {
-            ToastView(icon: "trash.fill", message: "Transaction deleted", isShowing: $showDeletedToast)
-                .animation(.springMedium, value: showDeletedToast)
-        }
+        .overlay { deleteToastOverlay }
         .task { setupAndLoad() }
+    }
+}
+
+// MARK: - Sheets & Alerts
+
+private extension TransactionLogView {
+    var filterSheet: some View {
+        FilterSheet(
+            selectedPeriod: $filterPeriod,
+            selectedCategory: $filterCategory,
+            onApply: { applyFilters() }
+        )
+        .presentationDetents([.medium])
+    }
+
+    func editSheet(for tx: Transaction) -> some View {
+        EditTransactionSheet(
+            transaction: tx,
+            onSave: { amount, note, cat, clearCat in
+                handleEditSave(tx, amount: amount, note: note, category: cat, clearCategory: clearCat)
+            },
+            onDelete: {
+                transactionToDelete = tx
+            }
+        )
+        .presentationDetents([.large])
+    }
+
+    var categorySheetBinding: Binding<Bool> {
+        Binding(
+            get: { selectedCategory != nil },
+            set: { if !$0 { selectedCategory = nil } }
+        )
+    }
+
+    @ViewBuilder
+    var categorySheet: some View {
+        if let cat = selectedCategory {
+            CategoryDetailSheet(category: cat)
+                .presentationDetents([.medium, .large])
+        }
+    }
+
+    var deleteAlertBinding: Binding<Bool> {
+        Binding(
+            get: { transactionToDelete != nil },
+            set: { if !$0 { transactionToDelete = nil } }
+        )
+    }
+
+    @ViewBuilder
+    var deleteAlertActions: some View {
+        Button("Cancel", role: .cancel) {
+            transactionToDelete = nil
+        }
+        Button("Delete", role: .destructive) {
+            if let tx = transactionToDelete {
+                try? viewModel?.deleteTransaction(tx)
+                try? viewModel?.loadTransactions()
+                transactionToDelete = nil
+                withAnimation(.springMedium) {
+                    showDeletedToast = true
+                }
+            }
+        }
+    }
+
+    var deleteToastOverlay: some View {
+        ToastView(icon: "trash.fill", message: "Transaction deleted", isShowing: $showDeletedToast)
+            .animation(.springMedium, value: showDeletedToast)
     }
 }
 
@@ -273,8 +290,17 @@ private extension TransactionLogView {
         try? viewModel?.loadTransactions()
     }
 
-    func deleteTransaction(_ transaction: Transaction) {
-        transactionToDelete = transaction
+    func handleEditSave(_ tx: Transaction, amount: Double?, note: String?, category: Category?, clearCategory: Bool) {
+        try? viewModel?.updateTransaction(tx, newAmount: amount, newNote: note, newCategory: category, clearCategory: clearCategory)
+        try? viewModel?.loadTransactions()
+        withAnimation(.springMedium) {
+            highlightedTransactionID = tx.id
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            withAnimation(.springGentle) {
+                highlightedTransactionID = nil
+            }
+        }
     }
 }
 

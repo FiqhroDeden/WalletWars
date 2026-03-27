@@ -200,20 +200,27 @@ private extension QuickCaptureSheet {
             withAnimation(.springMedium) {
                 showSuccess = true
             }
+            // Check if we should request review (before dismiss)
+            let shouldRequestReview: Bool = {
+                guard !hasRequestedReview else { return false }
+                let profile = PlayerProfile.fetchOrCreate(context: modelContext)
+                return profile.currentLevel >= 3
+            }()
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                // Request review once when reaching Level 3+
-                if !hasRequestedReview {
-                    let profile = PlayerProfile.fetchOrCreate(context: modelContext)
-                    if profile.currentLevel >= 3 {
-                        hasRequestedReview = true
+                vm.resetFields()
+                dismiss()
+
+                // Request review after sheet dismisses to avoid suppression
+                if shouldRequestReview {
+                    hasRequestedReview = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         if let scene = UIApplication.shared.connectedScenes
                             .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
                             AppStore.requestReview(in: scene)
                         }
                     }
                 }
-                vm.resetFields()
-                dismiss()
             }
         } catch {
             // TODO: Show error alert
