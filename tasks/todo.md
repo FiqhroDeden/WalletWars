@@ -128,7 +128,13 @@
 
 ## V1.0 Improvements (pre-release polish)
 
-- [ ] (add improvements here as identified)
+- [x] ToastView reusable component
+- [x] War Chest card shows monthly budget source subtitle
+- [x] Settings: explicit Save button + success toast for budget changes
+- [x] Settings: replace dev build info with App Store review prompt
+- [x] Auto-prompt review at Level 3+ (one-time via @AppStorage)
+- [x] Log: green highlight animation on edited transaction row
+- [x] Log: delete confirmation alert + success toast
 
 ---
 
