@@ -14,7 +14,7 @@ enum TestHelpers {
         try ModelContainer(
             for: Transaction.self, Category.self, SavingQuest.self,
             QuestMilestone.self, PlayerProfile.self, WeeklySnapshot.self,
-            CurrentWeekTracker.self, DailyLog.self,
+            CurrentWeekTracker.self, DailyLog.self, ShameMark.self,
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
     }

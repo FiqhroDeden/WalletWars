@@ -193,6 +193,51 @@ enum WarChestState: String, Codable {
     }
 }
 
+// MARK: - Shame Marks
+
+enum ShameMarkType: String, Codable, CaseIterable {
+    case shieldShattered
+    case budgetBreaker
+    case impulseSpender
+    case streakDestroyer
+
+    var title: String {
+        switch self {
+        case .shieldShattered: "Shield Shattered"
+        case .budgetBreaker:   "Budget Breaker"
+        case .impulseSpender:  "Impulse Spender"
+        case .streakDestroyer: "Streak Destroyer"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .shieldShattered: "shield.slash.fill"
+        case .budgetBreaker:   "exclamationmark.triangle.fill"
+        case .impulseSpender:  "flame.fill"
+        case .streakDestroyer: "bolt.slash.fill"
+        }
+    }
+
+    var targetProgress: Int {
+        switch self {
+        case .shieldShattered: 5
+        case .budgetBreaker:   7
+        case .impulseSpender:  3
+        case .streakDestroyer: 7
+        }
+    }
+
+    var clearXP: Int {
+        switch self {
+        case .shieldShattered: 50
+        case .budgetBreaker:   75
+        case .impulseSpender:  50
+        case .streakDestroyer: 50
+        }
+    }
+}
+
 // MARK: - XP Constants
 
 enum XP {
@@ -205,4 +250,5 @@ enum XP {
     static let duelLoss: Int = 10
     static let loggingStreak: Int = 10
     static let budgetStreak: Int = 30
+    static let shameMarkCleared: Int = 50
 }

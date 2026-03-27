@@ -18,6 +18,7 @@ struct WalletWarsApp: App {
             WeeklySnapshot.self,
             CurrentWeekTracker.self,
             DailyLog.self,
+            ShameMark.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
