@@ -54,6 +54,17 @@ final class DashboardViewModel {
             profile: profile,
             todayLog: todayLog
         )
+
+        // Update overspend stats (checks yesterday)
+        try ShameMarkService.updateOverspendStats(profile: profile, context: context)
+
+        // Update shame mark progress
+        try ShameMarkService.updateProgress(profile: profile, context: context)
+
+        // Check and apply shame marks based on current state
+        try ShameMarkService.checkAndApply(profile: profile, dailyLog: log, context: context)
+
+        try context.save()
     }
 
     /// Fetch today's transactions sorted by date descending.
